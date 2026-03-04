@@ -32,5 +32,8 @@ export default {
   'minute': '分',
   'second': '秒',
   'retry': '重試',
-  'close': '關閉'
+  'close': '關閉',
+  'confirm-exit-title': '確認退出',
+  'confirm-exit-message': '確定要退出嗎？正在進行的下載將被暫停。',
+  'engine-not-ready': '引擎正在啟動，請稍候...'
 }

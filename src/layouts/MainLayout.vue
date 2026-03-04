@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { onMounted, onUnmounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useAppStore } from '@/stores/app'
 import { ADD_TASK_TYPE } from '@shared/constants'
 import { getCurrentWebview } from '@tauri-apps/api/webview'
+import { getCurrentWindow } from '@tauri-apps/api/window'
 import { listen } from '@tauri-apps/api/event'
 import AsideBar from '@/components/layout/AsideBar.vue'
 import TaskSubnav from '@/components/layout/TaskSubnav.vue'
@@ -16,20 +18,27 @@ import AddTask from '@/components/task/AddTask.vue'
 import { useTaskStore } from '@/stores/task'
 import { openUrl } from '@tauri-apps/plugin-opener'
 import { open as openDialog } from '@tauri-apps/plugin-dialog'
+import { useDialog } from 'naive-ui'
 
+const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const appStore = useAppStore()
 const taskStore = useTaskStore()
+const dialog = useDialog()
 
 const isTaskPage = computed(() => route.path.startsWith('/task'))
 const isPreferencePage = computed(() => route.path.startsWith('/preference'))
 const showAbout = ref(false)
+const appReady = ref(false)
 
 let unlistenDragDrop: (() => void) | null = null
 let unlistenMenuEvent: (() => void) | null = null
+let unlistenCloseRequested: (() => void) | null = null
 
 onMounted(async () => {
+  nextTick(() => { appReady.value = true })
+
   const webview = getCurrentWebview()
   unlistenDragDrop = await webview.onDragDropEvent((event) => {
     if (event.payload.type === 'drop') {
@@ -71,16 +80,33 @@ onMounted(async () => {
         break
     }
   })
+
+  const appWindow = getCurrentWindow()
+  unlistenCloseRequested = await appWindow.onCloseRequested(async (event) => {
+    event.preventDefault()
+    dialog.warning({
+      title: t('app.confirm-exit-title'),
+      content: t('app.confirm-exit-message'),
+      positiveText: t('app.yes'),
+      negativeText: t('app.no'),
+      onPositiveClick: async () => {
+        appReady.value = false
+        await new Promise((r) => setTimeout(r, 300))
+        await appWindow.destroy()
+      },
+    })
+  })
 })
 
 onUnmounted(() => {
   if (unlistenDragDrop) unlistenDragDrop()
   if (unlistenMenuEvent) unlistenMenuEvent()
+  if (unlistenCloseRequested) unlistenCloseRequested()
 })
 </script>
 
 <template>
-  <div id="container">
+  <div id="container" :class="{ 'app-ready': appReady }">
     <AsideBar @show-about="showAbout = true" />
     <div class="subnav-slot">
       <Transition name="fade" mode="out-in">
@@ -113,6 +139,11 @@ onUnmounted(() => {
   position: relative;
   border-radius: 12px;
   overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+#container.app-ready {
+  opacity: 1;
 }
 .subnav-slot {
   width: var(--subnav-width);

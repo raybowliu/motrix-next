@@ -7,7 +7,7 @@ import { usePreferenceStore } from '@/stores/preference'
 import { getTaskUri, getTaskName } from '@shared/utils'
 import { remove, stat } from '@tauri-apps/plugin-fs'
 import { revealItemInDir } from '@tauri-apps/plugin-opener'
-import aria2Api from '@/api/aria2'
+import aria2Api, { isEngineReady } from '@/api/aria2'
 import { useDialog, NCheckbox } from 'naive-ui'
 import { useAppMessage } from '@/composables/useAppMessage'
 import TaskList from '@/components/task/TaskList.vue'
@@ -39,10 +39,12 @@ let refreshTimer: ReturnType<typeof setTimeout> | null = null
 function startPolling() {
   stopPolling()
   function tick() {
-    Promise.all([
-      taskStore.fetchList(),
-      appStore.fetchGlobalStat(aria2Api),
-    ]).catch(console.error)
+    if (isEngineReady()) {
+      Promise.all([
+        taskStore.fetchList(),
+        appStore.fetchGlobalStat(aria2Api),
+      ]).catch(() => {})
+    }
     refreshTimer = setTimeout(tick, appStore.interval)
   }
   tick()

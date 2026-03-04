@@ -33,4 +33,8 @@ export default {
   'second': 'ث',
   'retry': 'Retry',
   'close': 'Close',
+
+  'confirm-exit-title': 'Confirm Exit',
+  'confirm-exit-message': 'Are you sure you want to quit? Active downloads will be paused.',
+  'engine-not-ready': 'Engine is starting, please wait...'
 }

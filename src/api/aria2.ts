@@ -7,6 +7,11 @@ import {
 } from '@shared/utils'
 
 let client: Aria2 | null = null
+let engineReady = false
+
+export function isEngineReady(): boolean {
+    return engineReady
+}
 
 export function getClient(): Aria2 {
     if (!client) throw new Error('Aria2 client not initialized')
@@ -20,6 +25,7 @@ export async function initClient(options: { port: number; secret: string }) {
         secret: options.secret,
     })
     await client.open()
+    engineReady = true
     return client
 }
 
