@@ -9,7 +9,7 @@ import { downloadDir } from '@tauri-apps/api/path'
 import { extractSpeedUnit } from '@shared/utils'
 import {
   NForm, NFormItem, NInput, NInputNumber, NSelect, NCheckbox, NSwitch,
-  NButton, NSpace, NDivider, NInputGroup, NText, useDialog
+  NButton, NSpace, NDivider, NInputGroup, NText, NCollapseTransition, useDialog
 } from 'naive-ui'
 import { FolderOpenOutline, CloudDownloadOutline } from '@vicons/ionicons5'
 import { NIcon } from 'naive-ui'
@@ -226,13 +226,15 @@ onMounted(async () => {
       <NFormItem :label="t('preferences.auto-check-update')">
         <NSwitch v-model:value="form.autoCheckUpdate" />
       </NFormItem>
-      <NFormItem v-if="form.autoCheckUpdate" :label="t('preferences.check-frequency')">
-        <NSelect
-          v-model:value="form.autoCheckUpdateInterval"
-          :options="checkIntervalOptions"
-          style="width: 180px;"
-        />
-      </NFormItem>
+      <NCollapseTransition :show="form.autoCheckUpdate">
+        <NFormItem :label="t('preferences.check-frequency')">
+          <NSelect
+            v-model:value="form.autoCheckUpdateInterval"
+            :options="checkIntervalOptions"
+            style="width: 180px;"
+          />
+        </NFormItem>
+      </NCollapseTransition>
       <NFormItem :label="t('preferences.last-check-update-time')">
         <NSpace align="center" :size="16">
           <NText v-if="form.lastCheckUpdateTime" depth="3" style="font-size: 13px;">

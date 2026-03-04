@@ -65,15 +65,25 @@ onMounted(changeCurrentList)
 onBeforeUnmount(stopPolling)
 
 async function deleteTaskFiles(task: Record<string, unknown>) {
+  const dir = task.dir as string
   const files = (task.files || []) as { path: string }[]
-  const deleted = new Set<string>()
+  const parentDirs = new Set<string>()
+
   for (const f of files) {
     if (!f.path) continue
     try { await remove(f.path) } catch {}
     try { await remove(f.path + '.aria2') } catch {}
-    deleted.add(f.path)
+    const lastSep = Math.max(f.path.lastIndexOf('/'), f.path.lastIndexOf('\\'))
+    if (lastSep > 0) {
+      const parent = f.path.substring(0, lastSep)
+      if (parent !== dir) parentDirs.add(parent)
+    }
   }
-  const dir = task.dir as string
+
+  for (const pd of parentDirs) {
+    try { await remove(pd, { recursive: true }) } catch {}
+  }
+
   if (dir) {
     const taskName = getTaskName(task as never, { defaultName: '', maxLen: -1 })
     if (taskName) {
@@ -81,6 +91,17 @@ async function deleteTaskFiles(task: Record<string, unknown>) {
       const taskDir = await join(dir, taskName)
       try { await remove(taskDir, { recursive: true }) } catch {}
     }
+    try {
+      const { readDir } = await import('@tauri-apps/plugin-fs')
+      const entries = await readDir(dir)
+      for (const entry of entries) {
+        if (entry.name.endsWith('.aria2')) {
+          const { join } = await import('@tauri-apps/api/path')
+          const fullPath = await join(dir, entry.name)
+          try { await remove(fullPath) } catch {}
+        }
+      }
+    } catch {}
   }
 }
 function handlePauseTask(task: Record<string, unknown>) {

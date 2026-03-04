@@ -16,8 +16,26 @@ app.use(pinia)
 app.use(router)
 app.use(i18n)
 
+app.mount('#app')
+
 const preferenceStore = usePreferenceStore()
 const taskStore = useTaskStore()
+
+async function waitForEngine(port: number, secret: string, maxRetries = 15): Promise<boolean> {
+    const { Aria2 } = await import('@shared/aria2')
+    for (let i = 0; i < maxRetries; i++) {
+        try {
+            const probe = new Aria2({ host: '127.0.0.1', port, secret })
+            await probe.open()
+            await probe.call('getVersion')
+            await probe.close()
+            return true
+        } catch {
+            await new Promise((r) => setTimeout(r, 500))
+        }
+    }
+    return false
+}
 
 preferenceStore.loadPreference().then(async () => {
     const locale = preferenceStore.locale
@@ -44,12 +62,15 @@ preferenceStore.loadPreference().then(async () => {
             config: { 'rpc-secret': secret, 'rpc-listen-port': String(port) },
         })
         await invoke('start_engine_command')
-        await new Promise((r) => setTimeout(r, 500))
     } catch (e) {
         console.error('[aria2] Failed to start engine:', e)
     }
 
-    // Connect WebSocket to aria2 RPC
+    const ready = await waitForEngine(port, secret)
+    if (!ready) {
+        console.error('[aria2] Engine did not become ready after retries')
+    }
+
     try {
         await initClient({ port, secret })
         console.log('[aria2] RPC client connected via WebSocket on port', port)
@@ -57,6 +78,4 @@ preferenceStore.loadPreference().then(async () => {
         console.warn('[aria2] WebSocket failed, using HTTP fallback:', e)
     }
 })
-
-app.mount('#app')
 

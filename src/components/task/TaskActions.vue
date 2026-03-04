@@ -57,14 +57,22 @@ function onDeleteAll() {
       if (deleteFiles.value) {
         const tasks = taskStore.taskList.filter(t => gids.includes(t.gid))
         for (const task of tasks) {
+          const dir = (task as Record<string, unknown>).dir as string
           const files = ((task as Record<string, unknown>).files || []) as { path: string }[]
+          const parentDirs = new Set<string>()
           for (const f of files) {
-            if (f.path) {
-              try { await remove(f.path) } catch {}
-              try { await remove(f.path + '.aria2') } catch {}
+            if (!f.path) continue
+            try { await remove(f.path) } catch {}
+            try { await remove(f.path + '.aria2') } catch {}
+            const lastSep = Math.max(f.path.lastIndexOf('/'), f.path.lastIndexOf('\\'))
+            if (lastSep > 0) {
+              const parent = f.path.substring(0, lastSep)
+              if (parent !== dir) parentDirs.add(parent)
             }
           }
-          const dir = (task as Record<string, unknown>).dir as string
+          for (const pd of parentDirs) {
+            try { await remove(pd, { recursive: true }) } catch {}
+          }
           if (dir) {
             const name = getTaskName(task as never, { defaultName: '', maxLen: -1 })
             if (name) {
@@ -72,6 +80,17 @@ function onDeleteAll() {
               const taskDir = await join(dir, name)
               try { await remove(taskDir, { recursive: true }) } catch {}
             }
+            try {
+              const { readDir } = await import('@tauri-apps/plugin-fs')
+              const entries = await readDir(dir)
+              for (const entry of entries) {
+                if (entry.name.endsWith('.aria2')) {
+                  const { join } = await import('@tauri-apps/api/path')
+                  const fullPath = await join(dir, entry.name)
+                  try { await remove(fullPath) } catch {}
+                }
+              }
+            } catch {}
           }
         }
       }
