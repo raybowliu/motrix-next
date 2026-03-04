@@ -25,3 +25,6 @@ dist-ssr
 
 # Legacy reference codebase
 motrix-legacy/
+
+# Original Motrix upstream source
+motrix-original/
