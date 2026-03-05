@@ -71,12 +71,12 @@ What changed is everything underneath. Every transition and micro-interaction ha
 - **Concurrent downloads** — Up to 10 tasks with configurable thread count
 - **Speed control** — Global and per-task upload/download limits
 - **System tray** — Real-time speed display in the menu bar (macOS)
-- **Dark mode** — Native dark theme as default, with system preference detection
-- **i18n** — Auto-detects system language on first launch, 25+ languages supported
+- **Dark mode** — Native dark theme with system preference detection
+- **i18n** — Auto-detects system language on first launch
 - **Task management** — Pause, resume, delete with file cleanup, batch operations
 - **Download protocols** — Register as default handler for magnet and thunder links
 - **Notifications** — System notifications on task completion
-- **Lightweight** — Tauri-based, ~10 MB bundle size (down from ~80 MB), minimal resource footprint
+- **Lightweight** — Tauri-powered, minimal resource footprint
 
 ## Installation
 
@@ -151,17 +151,6 @@ git push origin v1.0.3
 
 The workflow creates a draft release with all artifacts and a `latest.json` manifest for in-app auto-updates.
 
-## Tech Stack
-
-| Layer | Technology |
-|-------|------------|
-| Runtime | [Tauri 2](https://v2.tauri.app/) |
-| Frontend | [Vue 3](https://vuejs.org/) (Composition API) |
-| State | [Pinia](https://pinia.vuejs.org/) |
-| UI | [Naive UI](https://www.naiveui.com/) |
-| Language | TypeScript + Rust |
-| Build | Vite + Cargo |
-| Engine | [Aria2](https://aria2.github.io/) |
 
 ## Acknowledgements
 

@@ -172,28 +172,26 @@ function clearTorrent() {
 function handleTabChange(name: string) {
   slideDirection.value = name === ADD_TASK_TYPE.TORRENT ? 'left' : 'right'
 
-  // Lock the pane wrapper to current pixel height before switching
-  // so CSS transition can animate from pixel → pixel (not auto → pixel)
-  const card = document.querySelector('.add-task-card')
-  const wrapper = card?.querySelector('.n-tabs-pane-wrapper') as HTMLElement | null
-  if (wrapper) {
-    wrapper.style.height = wrapper.offsetHeight + 'px'
-    // Force reflow so the browser registers the current height
-    void wrapper.offsetHeight
-  }
+  // FLIP: snapshot current height before switch
+  const wrapper = document.querySelector('.add-task-card .n-tabs-pane-wrapper') as HTMLElement | null
+  const startHeight = wrapper?.offsetHeight ?? 0
 
   activeTab.value = name
 
-  // After Vue re-renders, measure new height and let CSS transition to it
+  // After Vue renders new tab content, animate height using Web Animations API
+  // (runs on compositor layer, doesn't conflict with NUI's inline style management)
   nextTick(() => {
-    if (wrapper) {
-      const pane = wrapper.querySelector('.n-tab-pane') as HTMLElement | null
-      if (pane) {
-        wrapper.style.height = pane.offsetHeight + 'px'
+    requestAnimationFrame(() => {
+      if (wrapper) {
+        const endHeight = wrapper.scrollHeight
+        if (Math.abs(startHeight - endHeight) > 2) {
+          wrapper.animate(
+            [{ height: startHeight + 'px' }, { height: endHeight + 'px' }],
+            { duration: 300, easing: 'cubic-bezier(0.2, 0, 0, 1)' }
+          )
+        }
       }
-      // After transition ends, release to auto so content can grow naturally
-      setTimeout(() => { wrapper.style.height = '' }, 350)
-    }
+    })
   })
 }
 
@@ -314,10 +312,10 @@ onUnmounted(() => { document.removeEventListener('keydown', handleHotkey) })
         <NTabs :value="activeTab" type="line" animated @update:value="handleTabChange">
           <NTabPane :name="ADD_TASK_TYPE.URI" :tab="t('task.uri-task') || 'URL'">
             <div class="tab-pane-content">
-              <NFormItem :show-label="false">
+              <NFormItem :show-label="false" style="margin-bottom: 0;">
                 <NInput
                   type="textarea"
-                  :rows="4"
+                  :rows="5"
                   :placeholder="t('task.uri-task-tips') || 'One URL per line'"
                   v-model:value="form.uris"
                 />
@@ -326,39 +324,41 @@ onUnmounted(() => { document.removeEventListener('keydown', handleHotkey) })
           </NTabPane>
           <NTabPane :name="ADD_TASK_TYPE.TORRENT" :tab="t('task.torrent-task') || 'Torrent'">
             <div class="tab-pane-content">
-              <template v-if="torrentLoaded">
-                <div class="torrent-info-row">
-                  <NTooltip>
-                    <template #trigger>
-                      <div class="torrent-filename">
-                        <NIcon :size="18" style="margin-right: 6px; flex-shrink: 0;"><CloudUploadOutline /></NIcon>
-                        <span>{{ torrentName }}</span>
-                      </div>
-                    </template>
-                    {{ torrentName }}
-                  </NTooltip>
-                  <NButton quaternary size="small" type="error" @click="clearTorrent">
-                    <template #icon><NIcon :size="16"><TrashOutline /></NIcon></template>
-                  </NButton>
+              <Transition name="torrent-swap" mode="out-in">
+                <div v-if="torrentLoaded" key="loaded" class="torrent-loaded">
+                  <div class="torrent-info-row">
+                    <NTooltip>
+                      <template #trigger>
+                        <div class="torrent-filename">
+                          <NIcon :size="18" style="margin-right: 6px; flex-shrink: 0;"><CloudUploadOutline /></NIcon>
+                          <span>{{ torrentName }}</span>
+                        </div>
+                      </template>
+                      {{ torrentName }}
+                    </NTooltip>
+                    <NButton quaternary size="small" type="error" @click="clearTorrent">
+                      <template #icon><NIcon :size="16"><TrashOutline /></NIcon></template>
+                    </NButton>
+                  </div>
+                  <div v-if="torrentFiles.length > 0" class="torrent-file-list">
+                    <NDataTable
+                      :columns="fileColumns"
+                      :data="torrentFiles"
+                      :row-key="(row: any) => row.idx as number"
+                      v-model:checked-row-keys="checkedRowKeys"
+                      size="small"
+                      :max-height="200"
+                      :scroll-x="400"
+                    />
+                  </div>
                 </div>
-                <div v-if="torrentFiles.length > 0" class="torrent-file-list">
-                  <NDataTable
-                    :columns="fileColumns"
-                    :data="torrentFiles"
-                    :row-key="(row: any) => row.idx as number"
-                    v-model:checked-row-keys="checkedRowKeys"
-                    size="small"
-                    :max-height="200"
-                    :scroll-x="400"
-                  />
+                <div v-else key="empty" class="torrent-upload" @click="chooseTorrentFile">
+                  <NIcon :size="48" :depth="3"><CloudUploadOutline /></NIcon>
+                  <NText style="display: block; margin-top: 8px; font-size: 14px;">
+                    {{ t('task.select-torrent') || 'Drag torrent here or click to select' }}
+                  </NText>
                 </div>
-              </template>
-              <div v-else class="torrent-upload" @click="chooseTorrentFile">
-                <NIcon :size="48" :depth="3"><CloudUploadOutline /></NIcon>
-                <NText style="display: block; margin-top: 8px; font-size: 14px;">
-                  {{ t('task.select-torrent') || 'Drag torrent here or click to select' }}
-                </NText>
-              </div>
+              </Transition>
             </div>
           </NTabPane>
         </NTabs>
@@ -430,14 +430,25 @@ onUnmounted(() => { document.removeEventListener('keydown', handleHotkey) })
 
 <style scoped>
 .tab-pane-content {
-  min-height: 130px;
+  min-height: 150px;
   padding-bottom: 12px;
 }
-.add-task-card :deep(.n-card__content) {
-  transition: height 0.3s cubic-bezier(0.2, 0, 0, 1);
+.torrent-swap-enter-active {
+  transition: opacity 0.22s cubic-bezier(0.2, 0, 0, 1), transform 0.22s cubic-bezier(0.2, 0, 0, 1);
+}
+.torrent-swap-leave-active {
+  transition: opacity 0.15s cubic-bezier(0.3, 0, 0.8, 0.15), transform 0.15s cubic-bezier(0.3, 0, 0.8, 0.15);
+}
+.torrent-swap-enter-from {
+  opacity: 0;
+  transform: scale(0.96);
+}
+.torrent-swap-leave-to {
+  opacity: 0;
+  transform: scale(0.96);
 }
 .torrent-upload {
-  min-height: 118px;
+  min-height: 138px;
   display: flex;
   flex-direction: column;
   align-items: center;
