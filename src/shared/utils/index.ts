@@ -99,9 +99,11 @@ export const peerIdParser = (str: string): string => {
     if (!str || str === UNKNOWN_PEERID) {
         return UNKNOWN_PEERID_NAME
     }
-    if (str.startsWith('-') && str.length >= 8) {
-        const clientId = str.substring(1, 3)
-        const versionRaw = str.substring(3, 7)
+    let decoded = str
+    try { decoded = decodeURIComponent(str) } catch { }
+    if (decoded.startsWith('-') && decoded.length >= 8) {
+        const clientId = decoded.substring(1, 3)
+        const versionRaw = decoded.substring(3, 7)
         const clientName = PEER_CLIENT_MAP[clientId]
         if (clientName) {
             const version = versionRaw.replace(/-+$/, '').split('').join('.')
