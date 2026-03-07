@@ -42,7 +42,7 @@ function openUrl(url: string) {
           <div class="about-logo">
             <img src="@/assets/logo.png" alt="Motrix Next" width="100" height="100" style="border-radius: 20px;" />
           </div>
-          <div class="about-title">Motrix Next</div>
+          <div class="about-title">Motrix <span class="about-title-accent">Next</span></div>
           <div class="about-version">v{{ version }}</div>
         </div>
 
@@ -118,11 +118,16 @@ function openUrl(url: string) {
   letter-spacing: 0.5px;
   margin-top: 8px;
 }
+.about-title-accent {
+  color: #E0A422;
+}
 .about-version {
-  font-size: 12px;
-  opacity: 0.45;
-  font-weight: 500;
-  letter-spacing: 1px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  padding: 3px 14px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 .about-desc {
   margin-top: 12px;
