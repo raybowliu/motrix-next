@@ -200,6 +200,15 @@ onMounted(async () => {
   const appWindow = getCurrentWindow()
   unlistenCloseRequested = await appWindow.onCloseRequested(async (event) => {
     event.preventDefault()
+
+    // When minimize-to-tray is enabled, hide the window instead of prompting
+    // to exit. This covers all native close paths: taskbar close, Alt+F4,
+    // GNOME Activities overview ×, and WM-level close signals on Wayland.
+    if (preferenceStore.config.minimizeToTrayOnClose) {
+      await appWindow.hide()
+      return
+    }
+
     if (!isExiting.value) {
       showExitDialog.value = true
     }

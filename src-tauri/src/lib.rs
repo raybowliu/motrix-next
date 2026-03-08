@@ -8,6 +8,7 @@ use crate::commands::updater::UpdateCancelState;
 use engine::EngineState;
 use tauri::{Emitter, Manager};
 use tauri_plugin_deep_link::DeepLinkExt;
+use tauri_plugin_store::StoreExt;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -107,6 +108,31 @@ pub fn run() {
         .run(|app, event| match event {
             tauri::RunEvent::Exit => {
                 let _ = engine::stop_engine(app);
+            }
+            // Rust-level defense for minimize-to-tray on close.
+            // On Linux/Wayland with decorations:false, the frontend
+            // onCloseRequested listener may not fire for all close
+            // paths (e.g. Alt+F4, GNOME overview ×, taskbar close).
+            // This handler ensures the window is hidden rather than
+            // destroyed when the setting is enabled.
+            tauri::RunEvent::WindowEvent {
+                event: tauri::WindowEvent::CloseRequested { api, .. },
+                label,
+                ..
+            } => {
+                let should_hide = app
+                    .store("user.json")
+                    .ok()
+                    .and_then(|s| s.get("minimize-to-tray-on-close"))
+                    .and_then(|v| v.as_bool())
+                    .unwrap_or(false);
+
+                if should_hide {
+                    api.prevent_close();
+                    if let Some(window) = app.get_webview_window(&label) {
+                        let _ = window.hide();
+                    }
+                }
             }
             #[cfg(target_os = "macos")]
             tauri::RunEvent::Reopen { .. } => {

@@ -75,6 +75,12 @@ pub fn setup_tray(app: &AppHandle) -> Result<TrayMenuState, Box<dyn std::error::
                 let _ = app.emit("menu-event", "pause-all");
             }
             "tray-quit" => {
+                // Destroy the window first to bypass the frontend CloseRequested
+                // listener (which would otherwise show an exit confirmation dialog).
+                // destroy() is a hard kill that doesn't fire CloseRequested.
+                if let Some(window) = app.get_webview_window("main") {
+                    let _ = window.destroy();
+                }
                 app.exit(0);
             }
             _ => {}
