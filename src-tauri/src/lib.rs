@@ -61,11 +61,15 @@ pub fn run() {
         ])
         .setup(|app| {
             let handle = app.handle();
-            let m = menu::build_menu(handle)?;
-            app.set_menu(m)?;
+            #[cfg(target_os = "macos")]
+            {
+                let m = menu::build_menu(handle)?;
+                app.set_menu(m)?;
+            }
             let tray_state = tray::setup_tray(handle)?;
             app.manage(tray_state);
 
+            #[cfg(target_os = "macos")]
             app.on_menu_event(|app, event| match event.id().as_ref() {
                 "new-task" => {
                     let _ = app.emit("menu-event", "new-task");

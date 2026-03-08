@@ -39,6 +39,7 @@ export default {
   'theme-light': 'Claro',
   'theme-dark': 'Oscuro',
   'auto-hide-window': 'Ocultar ventana automáticamente',
+  'minimize-to-tray-on-close': 'Minimizar a la bandeja al cerrar',
   'run-mode': 'Modo de ejecución',
   'run-mode-standard': 'Estándar',
   'run-mode-tray': 'Bandeja',

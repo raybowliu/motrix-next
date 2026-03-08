@@ -39,6 +39,7 @@ export default {
   'theme-light': 'Terang',
   'theme-dark': 'Gelap',
   'auto-hide-window': 'Sembunyikan jendela otomatis',
+  'minimize-to-tray-on-close': 'Minimalkan ke tray saat ditutup',
   'run-mode': 'Mode operasi',
   'run-mode-standard': 'Standar',
   'run-mode-tray': 'Baki sistem',

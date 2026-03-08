@@ -39,6 +39,7 @@ export default {
   'theme-light': 'Açık',
   'theme-dark': 'Koyu',
   'auto-hide-window': 'Pencereyi otomatik gizle',
+  'minimize-to-tray-on-close': 'Kapatıldığında sistem tepsisine küçült',
   'run-mode': 'Çalışma modu',
   'run-mode-standard': 'Standart',
   'run-mode-tray': 'Sistem tepsisi',

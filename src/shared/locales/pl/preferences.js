@@ -39,6 +39,7 @@ export default {
   'theme-light': 'Jasny',
   'theme-dark': 'Ciemny',
   'auto-hide-window': 'Automatycznie ukrywaj okno',
+  'minimize-to-tray-on-close': 'Minimalizuj do zasobnika przy zamykaniu',
   'run-mode': 'Tryb działania',
   'run-mode-standard': 'Standardowy',
   'run-mode-tray': 'Zasobnik',

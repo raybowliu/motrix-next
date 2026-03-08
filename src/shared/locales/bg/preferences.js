@@ -39,6 +39,7 @@ export default {
   'theme-light': 'Светъл',
   'theme-dark': 'Тъмен',
   'auto-hide-window': 'Автоматично скриване на прозореца',
+  'minimize-to-tray-on-close': 'Минимизиране в системния трей при затваряне',
   'run-mode': 'Режим на работа',
   'run-mode-standard': 'Стандартен',
   'run-mode-tray': 'Системна лента',

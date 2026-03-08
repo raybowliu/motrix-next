@@ -17,8 +17,8 @@ export const usePreferenceStore = defineStore('preference', () => {
   /** Callback registered by the active preference page to save before navigation. */
   const saveBeforeLeave = ref<(() => void) | null>(null)
   const config = ref<AppConfig>({
-    theme: 'dark',
-    locale: 'en-US',
+    theme: 'auto',
+    locale: '',
     showProgressBar: true,
     traySpeedometer: true,
     autoSyncTracker: true,

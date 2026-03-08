@@ -3,8 +3,10 @@
 import { getCurrentWindow } from '@tauri-apps/api/window'
 import { NIcon } from 'naive-ui'
 import { RemoveOutline, CopyOutline, CloseOutline } from '@vicons/ionicons5'
+import { usePreferenceStore } from '@/stores/preference'
 
 const appWindow = getCurrentWindow()
+const preferenceStore = usePreferenceStore()
 
 function minimize() {
   appWindow.minimize()
@@ -15,7 +17,11 @@ function toggleMaximize() {
 }
 
 function close() {
-  appWindow.close()
+  if (preferenceStore.config.minimizeToTrayOnClose) {
+    appWindow.hide()
+  } else {
+    appWindow.close()
+  }
 }
 </script>
 
@@ -42,10 +48,10 @@ function close() {
 .ctrl-btn {
   width: 32px;
   height: 32px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid var(--window-ctrl-border);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.06);
-  color: rgba(255, 255, 255, 0.55);
+  background: var(--window-ctrl-bg);
+  color: var(--window-ctrl-color);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -55,9 +61,9 @@ function close() {
   padding: 0;
 }
 .ctrl-btn:hover {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.2);
-  color: rgba(255, 255, 255, 0.9);
+  background: var(--window-ctrl-hover-bg);
+  border-color: var(--window-ctrl-hover-border);
+  color: var(--window-ctrl-hover-color);
 }
 .ctrl-btn.close:hover {
   background: rgba(255, 59, 48, 0.75);

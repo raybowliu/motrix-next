@@ -39,6 +39,7 @@ export default {
   'theme-light': 'روشن',
   'theme-dark': 'تیره',
   'auto-hide-window': 'مخفی کردن خودکار پنجره',
+  'minimize-to-tray-on-close': 'کوچک‌سازی به سینی سیستم هنگام بستن',
   'run-mode': 'حالت اجرا',
   'run-mode-standard': 'استاندارد',
   'run-mode-tray': 'نوار سیستم',

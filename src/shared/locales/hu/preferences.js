@@ -39,6 +39,7 @@ export default {
   'theme-light': 'Világos',
   'theme-dark': 'Sötét',
   'auto-hide-window': 'Ablak automatikus elrejtése',
+  'minimize-to-tray-on-close': 'Bezáráskor tálcára kicsinyítés',
   'run-mode': 'Futási mód',
   'run-mode-standard': 'Szabványos',
   'run-mode-tray': 'Tálca',

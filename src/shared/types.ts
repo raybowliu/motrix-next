@@ -131,6 +131,7 @@ export interface AppConfig {
   openAtLogin: boolean
   autoCheckUpdate: boolean
   autoHideWindow: boolean
+  minimizeToTrayOnClose: boolean
   autoSyncTracker: boolean
   keepSeeding: boolean
   keepWindowState: boolean

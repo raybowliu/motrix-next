@@ -39,6 +39,7 @@ export default {
   'theme-light': 'Lys',
   'theme-dark': 'Mørk',
   'auto-hide-window': 'Skjul vindu automatisk',
+  'minimize-to-tray-on-close': 'Minimer til systemstatusfeltet ved lukking',
   'run-mode': 'Kjøremodus',
   'run-mode-standard': 'Standard',
   'run-mode-tray': 'Systemkurv',

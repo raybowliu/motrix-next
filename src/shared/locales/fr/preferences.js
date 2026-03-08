@@ -39,6 +39,7 @@ export default {
   'theme-light': 'Clair',
   'theme-dark': 'Sombre',
   'auto-hide-window': 'Masquer automatiquement la fenêtre',
+  'minimize-to-tray-on-close': 'Réduire dans la barre des tâches à la fermeture',
   'run-mode': 'Mode d\'exécution',
   'run-mode-standard': 'Standard',
   'run-mode-tray': 'Barre de menu',

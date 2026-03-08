@@ -39,6 +39,7 @@ export default {
   'theme-light': 'Hell',
   'theme-dark': 'Dunkel',
   'auto-hide-window': 'Fenster automatisch ausblenden',
+  'minimize-to-tray-on-close': 'Beim Schließen in den Infobereich minimieren',
   'run-mode': 'Ausführungsmodus',
   'run-mode-standard': 'Standard',
   'run-mode-tray': 'Taskleiste',

@@ -39,6 +39,7 @@ export default {
   'theme-light': 'Chiaro',
   'theme-dark': 'Scuro',
   'auto-hide-window': 'Nascondi finestra automaticamente',
+  'minimize-to-tray-on-close': 'Riduci a icona nella barra delle applicazioni alla chiusura',
   'run-mode': 'Modalità di esecuzione',
   'run-mode-standard': 'Standard',
   'run-mode-tray': 'Barra di sistema',

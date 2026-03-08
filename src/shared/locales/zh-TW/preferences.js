@@ -39,6 +39,7 @@ export default {
   'theme-light': '淺色',
   'theme-dark': '深色',
   'auto-hide-window': '自動隱藏視窗',
+  'minimize-to-tray-on-close': '關閉時最小化到托盤',
   'run-mode': '執行模式',
   'run-mode-standard': '標準應用程式',
   'run-mode-tray': '工具列應用程式',

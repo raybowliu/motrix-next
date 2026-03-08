@@ -74,6 +74,7 @@ function buildForm() {
     keepWindowState: !!config.keepWindowState,
     resumeAllWhenAppLaunched: !!config.resumeAllWhenAppLaunched,
     autoHideWindow: !!config.autoHideWindow,
+    minimizeToTrayOnClose: !!config.minimizeToTrayOnClose,
     showProgressBar: !!config.showProgressBar,
     traySpeedometer: !!config.traySpeedometer,
     dockBadgeSpeed: config.dockBadgeSpeed !== false,
@@ -311,6 +312,9 @@ onMounted(async () => {
       </NFormItem>
       <NFormItem :label="t('preferences.auto-hide-window')">
         <NSwitch v-model:value="form.autoHideWindow" />
+      </NFormItem>
+      <NFormItem :label="t('preferences.minimize-to-tray-on-close')">
+        <NSwitch v-model:value="form.minimizeToTrayOnClose" />
       </NFormItem>
       <NFormItem v-if="isMacOrWin" :label="t('preferences.show-progress-bar')">
         <NSwitch v-model:value="form.showProgressBar" />

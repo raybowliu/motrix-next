@@ -39,6 +39,7 @@ export default {
   'theme-light': '라이트',
   'theme-dark': '다크',
   'auto-hide-window': '창 자동 숨기기',
+  'minimize-to-tray-on-close': '닫을 때 트레이로 최소화',
   'run-mode': '실행 모드',
   'run-mode-standard': '표준',
   'run-mode-tray': '시스템 트레이',

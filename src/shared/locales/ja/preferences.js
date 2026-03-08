@@ -39,6 +39,7 @@ export default {
   'theme-light': 'ライト',
   'theme-dark': 'ダーク',
   'auto-hide-window': 'ウィンドウを自動で隠す',
+  'minimize-to-tray-on-close': '閉じたときにトレイに最小化',
   'run-mode': '実行モード',
   'run-mode-standard': '標準',
   'run-mode-tray': 'トレイ',

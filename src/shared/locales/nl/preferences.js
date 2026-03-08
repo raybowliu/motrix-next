@@ -39,6 +39,7 @@ export default {
   'theme-light': 'Licht',
   'theme-dark': 'Donker',
   'auto-hide-window': 'Venster automatisch verbergen',
+  'minimize-to-tray-on-close': 'Minimaliseren naar systeemvak bij sluiten',
   'run-mode': 'Uitvoeringsmodus',
   'run-mode-standard': 'Standaard',
   'run-mode-tray': 'Systeemvak',

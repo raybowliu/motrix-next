@@ -39,6 +39,7 @@ export default {
   'theme-light': 'Світла',
   'theme-dark': 'Темна',
   'auto-hide-window': 'Автоматично приховувати вікно',
+  'minimize-to-tray-on-close': 'Згортати в трей при закритті',
   'run-mode': 'Режим роботи',
   'run-mode-standard': 'Стандартний',
   'run-mode-tray': 'Системний лоток',

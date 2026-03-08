@@ -39,6 +39,7 @@ export default {
   'theme-light': 'Φωτεινό',
   'theme-dark': 'Σκοτεινό',
   'auto-hide-window': 'Αυτόματη απόκρυψη παραθύρου',
+  'minimize-to-tray-on-close': 'Ελαχιστοποίηση στο δίσκο κατά το κλείσιμο',
   'run-mode': 'Λειτουργία εκτέλεσης',
   'run-mode-standard': 'Τυπική',
   'run-mode-tray': 'Γραμμή εργασιών',

@@ -39,6 +39,7 @@ export default {
   'theme-light': 'Clar',
   'theme-dark': 'Fosc',
   'auto-hide-window': 'Amagar la finestra automàticament',
+  'minimize-to-tray-on-close': 'Minimitzar a la safata en tancar',
   'run-mode': 'Mode d\'execució',
   'run-mode-standard': 'Estàndard',
   'run-mode-tray': 'Safata',

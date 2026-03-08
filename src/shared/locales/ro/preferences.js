@@ -39,6 +39,7 @@ export default {
   'theme-light': 'Deschis',
   'theme-dark': 'Închis',
   'auto-hide-window': 'Ascunde fereastra automat',
+  'minimize-to-tray-on-close': 'Minimizare în bara de sistem la închidere',
   'run-mode': 'Mod de execuție',
   'run-mode-standard': 'Standard',
   'run-mode-tray': 'Bara de sistem',

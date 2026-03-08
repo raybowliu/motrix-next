@@ -39,6 +39,7 @@ export default {
   'theme-light': 'สว่าง',
   'theme-dark': 'มืด',
   'auto-hide-window': 'ซ่อนหน้าต่างอัตโนมัติ',
+  'minimize-to-tray-on-close': 'ย่อลงในถาดเมื่อปิด',
   'run-mode': 'โหมดการทำงาน',
   'run-mode-standard': 'มาตรฐาน',
   'run-mode-tray': 'ถาดระบบ',

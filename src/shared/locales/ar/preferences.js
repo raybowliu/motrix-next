@@ -39,6 +39,7 @@ export default {
   'theme-light': 'فاتح',
   'theme-dark': 'داكن',
   'auto-hide-window': 'إخفاء النافذة تلقائيًا',
+  'minimize-to-tray-on-close': 'تصغير إلى شريط المهام عند الإغلاق',
   'run-mode': 'وضع التشغيل',
   'run-mode-standard': 'قياسي',
   'run-mode-tray': 'شريط النظام',

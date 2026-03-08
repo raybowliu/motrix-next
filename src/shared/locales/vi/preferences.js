@@ -39,6 +39,7 @@ export default {
   'theme-light': 'Sáng',
   'theme-dark': 'Tối',
   'auto-hide-window': 'Tự động ẩn cửa sổ',
+  'minimize-to-tray-on-close': 'Thu nhỏ vào khay hệ thống khi đóng',
   'run-mode': 'Chế độ chạy',
   'run-mode-standard': 'Tiêu chuẩn',
   'run-mode-tray': 'Khay hệ thống',

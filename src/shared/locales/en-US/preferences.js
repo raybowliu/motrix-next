@@ -39,6 +39,7 @@ export default {
   'theme-light': 'Light',
   'theme-dark': 'Dark',
   'auto-hide-window': 'Auto-hide window',
+  'minimize-to-tray-on-close': 'Minimize to tray on close',
   'run-mode': 'Run Mode',
   'run-mode-standard': 'Standard',
   'run-mode-tray': 'Tray',
