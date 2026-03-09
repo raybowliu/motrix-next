@@ -39,17 +39,22 @@ src-tauri/
 │   ├── lib.rs                  # Tauri builder, plugin registration, invoke_handler
 │   ├── commands/
 │   │   ├── app.rs              # Config, tray, menu, engine commands
-│   │   └── updater.rs          # check_for_update, install_update commands
+│   │   ├── updater.rs          # check_for_update, install_update commands
+│   │   └── upnp.rs             # UPnP port mapping commands
 │   ├── engine.rs               # aria2 sidecar lifecycle
-│   ├── error.rs                # AppError enum (Store, Engine, Io, NotFound, Updater)
-│   ├── menu.rs                 # Native menu builder
-│   └── tray.rs                 # System tray setup
+│   ├── error.rs                # AppError enum (Store, Engine, Io, NotFound, Updater, Upnp)
+│   ├── menu.rs                 # Native menu builder (macOS only, cfg-gated)
+│   ├── tray.rs                 # System tray setup
+│   └── upnp.rs                 # UPnP/IGD port mapping with renewal loop
 ├── Cargo.toml                  # VERSION SOURCE OF TRUTH
 └── tauri.conf.json             # Tauri config (no version field — reads from Cargo.toml)
 
-.github/workflows/
-├── ci.yml                      # Lint + type check + test (frontend & backend parallel jobs)
-└── release.yml                 # Build + sign + upload for 4 platforms + updater JSON
+.github/
+├── ISSUE_TEMPLATE/             # Bug report (YAML form) + feature request templates
+├── PULL_REQUEST_TEMPLATE.md    # PR template with TypeScript + Rust checklist
+└── workflows/
+    ├── ci.yml                  # Lint + type check + test (frontend & backend parallel jobs)
+    └── release.yml             # Build + sign + upload for 4 platforms + updater JSON
 ```
 
 ---
@@ -323,7 +328,7 @@ Two parallel jobs:
 ### Rust
 
 - **Error handling**: All commands return `Result<T, AppError>`, never raw `String` errors
-- **`AppError` enum** in `error.rs` with variants: `Store`, `Engine`, `Io`, `NotFound`, `Updater`
+- **`AppError` enum** in `error.rs` with variants: `Store`, `Engine`, `Io`, `NotFound`, `Updater`, `Upnp`
 - **Async commands**: Use `#[tauri::command]` with `async` for I/O operations
 - **Plugin usage**: Tauri plugin traits (e.g., `UpdaterExt`, `StoreExt`) imported in command modules
 
@@ -343,7 +348,7 @@ Run these before committing changes:
 # Frontend
 pnpm format                # Auto-format all source files with Prettier
 pnpm format:check          # Verify formatting (CI runs this)
-pnpm test                  # Vitest — 370+ unit tests
+pnpm test                  # Vitest unit tests
 npx vue-tsc --noEmit       # TypeScript type checking
 
 # Backend
