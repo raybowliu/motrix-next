@@ -140,9 +140,14 @@ async function checkFileExists() {
     return
   }
   try {
-    const firstFile = files[0]?.path
-    if (firstFile) {
-      fileMissing.value = !(await exists(firstFile))
+    // Only check files the user actually selected for download.
+    // For BT tasks with partial file selection, unselected files
+    // (selected === 'false') won't exist on disk — that is expected,
+    // not "missing". Fall back to files[0] for non-BT single-file tasks.
+    const selected = files.filter((f) => f.selected === 'true')
+    const target = (selected.length > 0 ? selected[0] : files[0])?.path
+    if (target) {
+      fileMissing.value = !(await exists(target))
     }
   } catch (e) {
     logger.debug('TaskItem.fileCheck', e)
@@ -152,25 +157,48 @@ async function checkFileExists() {
 
 onMounted(checkFileExists)
 watch(() => props.task.status, checkFileExists)
+
+// ── M3 seeding state entrance animation ───────────────────────────
+// CSS transitions fail here because the store's polling cycle replaces
+// task objects entirely — even though Vue reuses the DOM element (same
+// gid key), NProgress internally rebuilds its fill node, losing the
+// transition starting point. @keyframes animations do not depend on
+// property value continuity — they always play from→to.
+const seedingEnter = ref(false)
+
+watch(isSeeder, (now, was) => {
+  if (now && !was) {
+    seedingEnter.value = true
+  }
+})
 </script>
 
 <template>
-  <div class="task-item" :class="{ 'file-missing': fileMissing, 'is-seeding': isSeeder }" @dblclick="onDblClick">
+  <div
+    class="task-item"
+    :class="{ 'file-missing': fileMissing, 'is-seeding': isSeeder, 'seeding-enter': seedingEnter }"
+    @dblclick="onDblClick"
+    @animationend="seedingEnter = false"
+  >
     <div class="task-name" :title="taskFullName">
       <span>{{ taskFullName }}</span>
-      <div v-if="isSeeder || finishedTag || fileMissing" class="task-tags">
-        <span v-if="isSeeder" class="seeding-tag">
-          <NIcon :size="13"><CloudUploadOutline /></NIcon>
-          {{ t('task.seeding') || 'Seeding' }}
-        </span>
-        <span v-else-if="finishedTag" class="status-tag" :style="{ color: finishedTag.color }">
-          <NIcon :size="13"><component :is="finishedTag.icon" /></NIcon>
-          {{ finishedTag.label }}
-        </span>
-        <span v-if="fileMissing" class="file-missing-tag">
-          <NIcon :size="13"><AlertCircleOutline /></NIcon>
-          {{ t('task.file-missing') || 'File missing' }}
-        </span>
+      <div class="tags-wrapper" :class="{ 'has-tags': isSeeder || finishedTag || fileMissing }">
+        <div class="tags-inner">
+          <div v-if="isSeeder || finishedTag || fileMissing" class="task-tags">
+            <span v-if="isSeeder" class="seeding-tag">
+              <NIcon :size="13"><CloudUploadOutline /></NIcon>
+              {{ t('task.seeding') || 'Seeding' }}
+            </span>
+            <span v-else-if="finishedTag" class="status-tag" :style="{ color: finishedTag.color }">
+              <NIcon :size="13"><component :is="finishedTag.icon" /></NIcon>
+              {{ finishedTag.label }}
+            </span>
+            <span v-if="fileMissing" class="file-missing-tag">
+              <NIcon :size="13"><AlertCircleOutline /></NIcon>
+              {{ t('task.file-missing') || 'File missing' }}
+            </span>
+          </div>
+        </div>
       </div>
     </div>
     <TaskItemActions
@@ -237,8 +265,52 @@ watch(() => props.task.status, checkFileExists)
   padding: 16px 12px;
   background-color: var(--task-item-bg);
   border: 1px solid var(--task-item-border);
+  /* Reserve 3px left border at base color so seeding only animates color */
+  border-left: 3px solid var(--task-item-border);
   border-radius: 6px;
   transition: border-color 0.2s cubic-bezier(0.2, 0, 0, 1);
+}
+/* Gradient overlay — always present, hidden by default */
+.task-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--m3-success) 6%, transparent) 0%, transparent 40%);
+  opacity: 0;
+  pointer-events: none;
+}
+/* ── Seeding state (static) ────────────────────────────────────────── */
+.task-item.is-seeding {
+  border-left-color: var(--m3-success);
+}
+.task-item.is-seeding::before {
+  opacity: 1;
+}
+/* ── Seeding entrance animation (triggered by Vue watch) ───────────── */
+/* @keyframes always plays from→to regardless of prior DOM state,       */
+/* unlike CSS transitions which break when the element is re-rendered.  */
+@keyframes seeding-border-enter {
+  from {
+    border-left-color: var(--task-item-border);
+  }
+  to {
+    border-left-color: var(--m3-success);
+  }
+}
+@keyframes seeding-overlay-enter {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.task-item.seeding-enter {
+  animation: seeding-border-enter 1s cubic-bezier(0.05, 0.7, 0.1, 1) forwards;
+}
+.task-item.seeding-enter::before {
+  animation: seeding-overlay-enter 1.2s cubic-bezier(0.05, 0.7, 0.1, 1) forwards;
 }
 .task-item:hover {
   border-color: var(--task-item-hover-border);
@@ -268,18 +340,25 @@ watch(() => props.task.status, checkFileExists)
   color: var(--m3-error);
   opacity: 0.85;
   vertical-align: middle;
-  animation: fade-in 0.3s ease;
+  animation: m3-tag-enter 0.35s cubic-bezier(0.05, 0.7, 0.1, 1);
 }
-@keyframes fade-in {
+/* M3 emphasized-decelerate tag entrance — shared by all status tags */
+@keyframes m3-tag-enter {
   from {
     opacity: 0;
+    transform: translateY(4px);
   }
   to {
-    opacity: 0.85;
+    opacity: 0.9;
+    transform: translateY(0);
   }
 }
 .task-item.file-missing {
   border-color: var(--m3-error-container-bg);
+}
+/* M3 progress-bar color transition (amber → green on status change) */
+.task-progress :deep(.n-progress-graph-line-fill) {
+  transition: background-color 0.5s cubic-bezier(0.2, 0, 0, 1);
 }
 .task-progress-info {
   display: flex;
@@ -313,6 +392,23 @@ watch(() => props.task.status, checkFileExists)
   align-items: center;
   gap: 8px;
 }
+/* ── Tag height transition (CSS Grid 0fr→1fr) ────────────────────── */
+/* Wrapper is always in the DOM. grid-template-rows transitions from    */
+/* 0fr (collapsed, zero height) to 1fr (natural height). The inner      */
+/* element uses overflow:hidden + min-height:0 to clip during collapse.  */
+/* Works for all tags: seeding, completed, removed, file-missing.       */
+.tags-wrapper {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.4s cubic-bezier(0.05, 0.7, 0.1, 1);
+}
+.tags-wrapper.has-tags {
+  grid-template-rows: 1fr;
+}
+.tags-inner {
+  overflow: hidden;
+  min-height: 0;
+}
 .seeding-tag {
   display: inline-flex;
   align-items: center;
@@ -321,11 +417,7 @@ watch(() => props.task.status, checkFileExists)
   color: var(--m3-success);
   opacity: 0.9;
   vertical-align: middle;
-  animation: fade-in 0.3s ease;
-}
-.task-item.is-seeding {
-  border-left: 3px solid var(--m3-success);
-  background: linear-gradient(90deg, color-mix(in srgb, var(--m3-success) 4%, transparent) 0%, transparent 40%);
+  animation: m3-tag-enter 0.35s cubic-bezier(0.05, 0.7, 0.1, 1);
 }
 .status-tag {
   display: inline-flex;
@@ -334,7 +426,7 @@ watch(() => props.task.status, checkFileExists)
   font-size: 13px;
   opacity: 0.9;
   vertical-align: middle;
-  animation: fade-in 0.3s ease;
+  animation: m3-tag-enter 0.35s cubic-bezier(0.05, 0.7, 0.1, 1);
 }
 .error-message {
   flex-basis: 100%;
