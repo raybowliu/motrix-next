@@ -45,5 +45,10 @@ export default {
   'menu-open-torrent': 'Torrent fájl megnyitása...',
   'menu-preferences': 'Beállítások...',
   'menu-release-notes': 'Kiadási megjegyzések',
-  'menu-report-issue': 'Hiba bejelentése'
+  'menu-report-issue': 'Hiba bejelentése',
+  'close-action-title': 'Bezárás megerősítése',
+  'close-action-message': 'Kicsinyítés a tálcára és futtatás tovább, vagy kilépés?',
+  'minimize-to-tray': 'Kicsinyítés a tálcára',
+  'remember-close-choice': 'Mindig kicsinyítés a tálcára',
+  'quit-app': 'Kilépés'
 }

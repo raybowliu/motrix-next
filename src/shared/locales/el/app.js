@@ -45,5 +45,10 @@ export default {
   'menu-open-torrent': 'Άνοιγμα αρχείου Torrent...',
   'menu-preferences': 'Προτιμήσεις...',
   'menu-release-notes': 'Σημειώσεις έκδοσης',
-  'menu-report-issue': 'Αναφορά προβλήματος'
+  'menu-report-issue': 'Αναφορά προβλήματος',
+  'close-action-title': 'Επιβεβαίωση κλεισίματος',
+  'close-action-message': 'Ελαχιστοποίηση στη γραμμή και συνέχιση, ή έξοδος;',
+  'minimize-to-tray': 'Ελαχιστοποίηση στη γραμμή',
+  'remember-close-choice': 'Πάντα ελαχιστοποίηση στη γραμμή',
+  'quit-app': 'Έξοδος'
 }

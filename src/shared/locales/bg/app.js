@@ -45,5 +45,10 @@ export default {
   'menu-open-torrent': 'Отваряне на Torrent файл...',
   'menu-preferences': 'Настройки...',
   'menu-release-notes': 'Бележки за версията',
-  'menu-report-issue': 'Докладване на проблем'
+  'menu-report-issue': 'Докладване на проблем',
+  'close-action-title': 'Потвърждение за затваряне',
+  'close-action-message': 'Минимизиране в трея и продължаване на работата, или изход?',
+  'minimize-to-tray': 'Минимизиране в трея',
+  'remember-close-choice': 'Винаги минимизирай в трея',
+  'quit-app': 'Изход'
 }

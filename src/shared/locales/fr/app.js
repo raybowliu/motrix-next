@@ -45,5 +45,10 @@ export default {
   'menu-open-torrent': 'Ouvrir un fichier Torrent...',
   'menu-preferences': 'Préférences...',
   'menu-release-notes': 'Notes de version',
-  'menu-report-issue': 'Signaler un problème'
+  'menu-report-issue': 'Signaler un problème',
+  'close-action-title': 'Confirmer la fermeture',
+  'close-action-message': 'Réduire dans la zone de notification et continuer, ou quitter ?',
+  'minimize-to-tray': 'Réduire dans la zone de notification',
+  'remember-close-choice': 'Toujours réduire dans la zone de notification',
+  'quit-app': 'Quitter'
 }

@@ -45,5 +45,10 @@ export default {
   'menu-open-torrent': 'Deschide fișier Torrent...',
   'menu-preferences': 'Preferințe...',
   'menu-release-notes': 'Note de lansare',
-  'menu-report-issue': 'Raportare problemă'
+  'menu-report-issue': 'Raportare problemă',
+  'close-action-title': 'Confirmă închiderea',
+  'close-action-message': 'Minimizează în bara de sistem și continuă, sau ieși?',
+  'minimize-to-tray': 'Minimizează în bară',
+  'remember-close-choice': 'Minimizează mereu în bara de sistem',
+  'quit-app': 'Ieșire'
 }

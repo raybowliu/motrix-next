@@ -45,5 +45,10 @@ export default {
   'menu-open-torrent': 'Mở tệp Torrent...',
   'menu-preferences': 'Tùy chọn...',
   'menu-release-notes': 'Ghi chú phát hành',
-  'menu-report-issue': 'Báo cáo sự cố'
+  'menu-report-issue': 'Báo cáo sự cố',
+  'close-action-title': 'Xác nhận đóng',
+  'close-action-message': 'Thu nhỏ vào khay và tiếp tục chạy, hay thoát?',
+  'minimize-to-tray': 'Thu nhỏ vào khay',
+  'remember-close-choice': 'Luôn thu nhỏ vào khay',
+  'quit-app': 'Thoát'
 }

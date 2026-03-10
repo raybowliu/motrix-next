@@ -45,5 +45,10 @@ export default {
   'menu-open-torrent': '토렌트 파일 열기...',
   'menu-preferences': '설정...',
   'menu-release-notes': '릴리스 노트',
-  'menu-report-issue': '문제 보고'
+  'menu-report-issue': '문제 보고',
+  'close-action-title': '닫기 확인',
+  'close-action-message': '트레이로 최소화하고 계속 실행할까요, 종료할까요?',
+  'minimize-to-tray': '트레이로 최소화',
+  'remember-close-choice': '항상 트레이로 최소화',
+  'quit-app': '종료'
 }

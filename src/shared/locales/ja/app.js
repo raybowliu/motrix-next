@@ -45,5 +45,10 @@ export default {
   'menu-open-torrent': 'Torrentファイルを開く...',
   'menu-preferences': '設定...',
   'menu-release-notes': 'リリースノート',
-  'menu-report-issue': '問題を報告'
+  'menu-report-issue': '問題を報告',
+  'close-action-title': '閉じる確認',
+  'close-action-message': 'トレイに最小化して実行を続けますか、それとも終了しますか？',
+  'minimize-to-tray': 'トレイに最小化',
+  'remember-close-choice': '常にトレイに最小化する',
+  'quit-app': '終了'
 }

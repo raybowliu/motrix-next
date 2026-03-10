@@ -45,5 +45,10 @@ export default {
   'menu-open-torrent': 'Open Torrent File...',
   'menu-preferences': 'Preferences...',
   'menu-release-notes': 'Release Notes',
-  'menu-report-issue': 'Report Issue'
+  'menu-report-issue': 'Report Issue',
+  'close-action-title': 'Confirm Close',
+  'close-action-message': 'Minimize to tray and keep running, or quit?',
+  'minimize-to-tray': 'Minimize to Tray',
+  'remember-close-choice': 'Always minimize to tray',
+  'quit-app': 'Quit'
 }

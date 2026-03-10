@@ -373,8 +373,16 @@ fn cleanup_port(port: &str) {
 
     #[cfg(windows)]
     {
+        use std::os::windows::process::CommandExt;
+
+        // Prevent child processes from creating visible console windows.
+        // Without this flag, each cmd.exe / taskkill spawn briefly flashes
+        // a CMD window on the user's desktop during startup cleanup.
+        const CREATE_NO_WINDOW: u32 = 0x08000000;
+
         let output = std::process::Command::new("cmd")
             .args(["/C", &format!("netstat -ano | findstr :{}", port)])
+            .creation_flags(CREATE_NO_WINDOW)
             .output();
 
         if let Ok(out) = output {
@@ -388,6 +396,7 @@ fn cleanup_port(port: &str) {
                                 "/C",
                                 &format!("tasklist /FI \"PID eq {}\" /NH /FO CSV 2>NUL", pid),
                             ])
+                            .creation_flags(CREATE_NO_WINDOW)
                             .output();
                         let is_aria2c = check
                             .map(|o| {
@@ -402,6 +411,7 @@ fn cleanup_port(port: &str) {
                             );
                             let _ = std::process::Command::new("taskkill")
                                 .args(["/F", "/PID", pid])
+                                .creation_flags(CREATE_NO_WINDOW)
                                 .status();
                         } else {
                             eprintln!(

@@ -45,5 +45,10 @@ export default {
   'menu-open-torrent': 'Torrent-Datei öffnen...',
   'menu-preferences': 'Einstellungen...',
   'menu-release-notes': 'Versionshinweise',
-  'menu-report-issue': 'Problem melden'
+  'menu-report-issue': 'Problem melden',
+  'close-action-title': 'Schließen bestätigen',
+  'close-action-message': 'In den Infobereich minimieren und weiterlaufen, oder beenden?',
+  'minimize-to-tray': 'In den Infobereich minimieren',
+  'remember-close-choice': 'Immer in den Infobereich minimieren',
+  'quit-app': 'Beenden'
 }

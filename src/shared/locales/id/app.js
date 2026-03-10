@@ -45,5 +45,10 @@ export default {
   'menu-open-torrent': 'Buka file Torrent...',
   'menu-preferences': 'Preferensi...',
   'menu-release-notes': 'Catatan rilis',
-  'menu-report-issue': 'Laporkan masalah'
+  'menu-report-issue': 'Laporkan masalah',
+  'close-action-title': 'Konfirmasi Penutupan',
+  'close-action-message': 'Minimalkan ke baki dan tetap berjalan, atau keluar?',
+  'minimize-to-tray': 'Minimalkan ke Baki',
+  'remember-close-choice': 'Selalu minimalkan ke baki',
+  'quit-app': 'Keluar'
 }

@@ -45,5 +45,10 @@ export default {
   'menu-open-torrent': 'Åpne Torrent-fil...',
   'menu-preferences': 'Innstillinger...',
   'menu-release-notes': 'Utgivelsesmerknader',
-  'menu-report-issue': 'Rapporter problem'
+  'menu-report-issue': 'Rapporter problem',
+  'close-action-title': 'Bekreft lukking',
+  'close-action-message': 'Minimere til systemfeltet og fortsette, eller avslutte?',
+  'minimize-to-tray': 'Minimer til systemfeltet',
+  'remember-close-choice': 'Alltid minimer til systemfeltet',
+  'quit-app': 'Avslutt'
 }

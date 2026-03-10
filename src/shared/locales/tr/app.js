@@ -45,5 +45,10 @@ export default {
   'menu-open-torrent': 'Torrent dosyası aç...',
   'menu-preferences': 'Tercihler...',
   'menu-release-notes': 'Sürüm notları',
-  'menu-report-issue': 'Sorun bildir'
+  'menu-report-issue': 'Sorun bildir',
+  'close-action-title': 'Kapatmayı onayla',
+  'close-action-message': 'Sistem tepsisine küçült ve çalışmaya devam et, yoksa çık?',
+  'minimize-to-tray': 'Tepsiye küçült',
+  'remember-close-choice': 'Her zaman sistem tepsisine küçült',
+  'quit-app': 'Çıkış'
 }

@@ -45,5 +45,10 @@ export default {
   'menu-open-torrent': 'Torrent-bestand openen...',
   'menu-preferences': 'Voorkeuren...',
   'menu-release-notes': 'Uitgavenotities',
-  'menu-report-issue': 'Probleem melden'
+  'menu-report-issue': 'Probleem melden',
+  'close-action-title': 'Sluiten bevestigen',
+  'close-action-message': 'Minimaliseren naar systeemvak en doorgaan, of afsluiten?',
+  'minimize-to-tray': 'Minimaliseren naar systeemvak',
+  'remember-close-choice': 'Altijd minimaliseren naar systeemvak',
+  'quit-app': 'Afsluiten'
 }

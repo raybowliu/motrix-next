@@ -45,5 +45,10 @@ export default {
   'menu-open-torrent': 'เปิดไฟล์ Torrent...',
   'menu-preferences': 'การตั้งค่า...',
   'menu-release-notes': 'บันทึกการเปลี่ยนแปลง',
-  'menu-report-issue': 'รายงานปัญหา'
+  'menu-report-issue': 'รายงานปัญหา',
+  'close-action-title': 'ยืนยันการปิด',
+  'close-action-message': 'ย่อลงถาดระบบแล้วทำงานต่อ หรือออก?',
+  'minimize-to-tray': 'ย่อลงถาดระบบ',
+  'remember-close-choice': 'ย่อลงถาดระบบทุกครั้ง',
+  'quit-app': 'ออก'
 }

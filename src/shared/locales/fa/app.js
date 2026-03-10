@@ -45,5 +45,10 @@ export default {
   'menu-open-torrent': 'باز کردن فایل Torrent...',
   'menu-preferences': 'تنظیمات...',
   'menu-release-notes': 'یادداشت‌های انتشار',
-  'menu-report-issue': 'گزارش مشکل'
+  'menu-report-issue': 'گزارش مشکل',
+  'close-action-title': 'تأیید بستن',
+  'close-action-message': 'کوچک کردن به سینی و ادامه اجرا، یا خروج؟',
+  'minimize-to-tray': 'کوچک کردن به سینی',
+  'remember-close-choice': 'همیشه به سینی کوچک شود',
+  'quit-app': 'خروج'
 }

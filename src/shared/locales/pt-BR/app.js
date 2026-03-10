@@ -45,5 +45,10 @@ export default {
   'menu-open-torrent': 'Abrir arquivo Torrent...',
   'menu-preferences': 'Preferências...',
   'menu-release-notes': 'Notas da versão',
-  'menu-report-issue': 'Relatar problema'
+  'menu-report-issue': 'Relatar problema',
+  'close-action-title': 'Confirmar fechamento',
+  'close-action-message': 'Minimizar para a bandeja e continuar, ou sair?',
+  'minimize-to-tray': 'Minimizar para a bandeja',
+  'remember-close-choice': 'Sempre minimizar para a bandeja',
+  'quit-app': 'Sair'
 }

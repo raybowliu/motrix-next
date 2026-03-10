@@ -45,5 +45,10 @@ export default {
   'menu-open-torrent': '開啟種子檔案...',
   'menu-preferences': '偏好設定...',
   'menu-release-notes': '更新日誌',
-  'menu-report-issue': '回報問題'
+  'menu-report-issue': '回報問題',
+  'close-action-title': '關閉確認',
+  'close-action-message': '最小化到系統匣繼續執行，還是結束？',
+  'minimize-to-tray': '最小化到系統匣',
+  'remember-close-choice': '以後直接最小化到系統匣',
+  'quit-app': '結束'
 }

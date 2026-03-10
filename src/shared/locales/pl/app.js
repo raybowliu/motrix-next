@@ -45,5 +45,10 @@ export default {
   'menu-open-torrent': 'Otwórz plik Torrent...',
   'menu-preferences': 'Preferencje...',
   'menu-release-notes': 'Informacje o wydaniu',
-  'menu-report-issue': 'Zgłoś problem'
+  'menu-report-issue': 'Zgłoś problem',
+  'close-action-title': 'Potwierdź zamknięcie',
+  'close-action-message': 'Zminimalizować do zasobnika i kontynuować, czy wyjść?',
+  'minimize-to-tray': 'Minimalizuj do zasobnika',
+  'remember-close-choice': 'Zawsze minimalizuj do zasobnika',
+  'quit-app': 'Wyjdź'
 }

@@ -45,5 +45,10 @@ export default {
   'menu-open-torrent': 'فتح ملف Torrent...',
   'menu-preferences': 'التفضيلات...',
   'menu-release-notes': 'ملاحظات الإصدار',
-  'menu-report-issue': 'الإبلاغ عن مشكلة'
+  'menu-report-issue': 'الإبلاغ عن مشكلة',
+  'close-action-title': 'تأكيد الإغلاق',
+  'close-action-message': 'تصغير إلى شريط النظام ومتابعة العمل، أم الخروج؟',
+  'minimize-to-tray': 'تصغير إلى شريط النظام',
+  'remember-close-choice': 'التصغير إلى شريط النظام تلقائيًا في المرة القادمة',
+  'quit-app': 'خروج'
 }

@@ -45,5 +45,10 @@ export default {
   'menu-open-torrent': 'Відкрити Torrent-файл...',
   'menu-preferences': 'Налаштування...',
   'menu-release-notes': 'Примітки до випуску',
-  'menu-report-issue': 'Повідомити про проблему'
+  'menu-report-issue': 'Повідомити про проблему',
+  'close-action-title': 'Підтвердження закриття',
+  'close-action-message': 'Згорнути до трею і продовжити роботу, чи вийти?',
+  'minimize-to-tray': 'Згорнути до трею',
+  'remember-close-choice': 'Завжди згортати до трею',
+  'quit-app': 'Вихід'
 }

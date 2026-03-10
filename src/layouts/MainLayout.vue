@@ -24,7 +24,7 @@ import { useAppMessage } from '@/composables/useAppMessage'
 import { openUrl } from '@tauri-apps/plugin-opener'
 import aria2Api, { isEngineReady } from '@/api/aria2'
 import { open as openDialog } from '@tauri-apps/plugin-dialog'
-import { NModal, NButton, NSpace, NIcon, useDialog } from 'naive-ui'
+import { NModal, NButton, NSpace, NIcon, NCheckbox, useDialog } from 'naive-ui'
 import { WarningOutline } from '@vicons/ionicons5'
 
 const { t } = useI18n()
@@ -42,6 +42,8 @@ const showAbout = ref(false)
 const appReady = ref(false)
 const showExitDialog = ref(false)
 const isExiting = ref(false)
+const rememberChoice = ref(false)
+const pendingTrayHide = ref(false)
 
 const updateDialogRef = ref<InstanceType<typeof UpdateDialog> | null>(null)
 
@@ -81,8 +83,15 @@ watch(
 )
 
 async function handleExitConfirm() {
+  // Checkbox means "always minimize to tray from now on" —
+  // save the setting even when quitting this time.
+  if (rememberChoice.value) {
+    preferenceStore.config.minimizeToTrayOnClose = true
+    await preferenceStore.savePreference()
+  }
   isExiting.value = true
   showExitDialog.value = false
+  rememberChoice.value = false
   appReady.value = false
   await new Promise((r) => setTimeout(r, 250))
   const appWindow = getCurrentWindow()
@@ -93,8 +102,30 @@ async function handleExitConfirm() {
   await exit(0)
 }
 
+async function handleMinimizeToTray() {
+  if (rememberChoice.value) {
+    preferenceStore.config.minimizeToTrayOnClose = true
+    await preferenceStore.savePreference()
+  }
+  // Defer window hide until NModal exit animation completes.
+  // If we hide immediately, the GPU compositor caches the frame with
+  // the dialog still visible, causing a flash when the window re-shows.
+  pendingTrayHide.value = true
+  showExitDialog.value = false
+  rememberChoice.value = false
+}
+
+async function onExitDialogAfterLeave() {
+  if (pendingTrayHide.value) {
+    pendingTrayHide.value = false
+    const appWindow = getCurrentWindow()
+    await appWindow.hide()
+  }
+}
+
 function handleExitCancel() {
   showExitDialog.value = false
+  rememberChoice.value = false
 }
 
 onMounted(async () => {
@@ -284,17 +315,18 @@ onUnmounted(() => {
     <AddTask :show="appStore.addTaskVisible" @close="appStore.hideAddTaskDialog()" />
     <UpdateDialog ref="updateDialogRef" />
 
-    <!-- Exit confirmation dialog with synchronized fade animation -->
+    <!-- Close action dialog: minimize-to-tray / quit / cancel -->
     <NModal
       :show="showExitDialog"
       preset="card"
-      :title="t('app.confirm-exit-title')"
+      :title="t('app.close-action-title')"
       :bordered="false"
       :closable="true"
       :mask-closable="true"
       size="small"
-      style="width: 400px"
+      style="width: 480px"
       transform-origin="center"
+      @after-leave="onExitDialogAfterLeave"
       @update:show="
         (v: boolean) => {
           if (!v) handleExitCancel()
@@ -302,18 +334,26 @@ onUnmounted(() => {
       "
     >
       <div class="exit-dialog-body">
-        <NIcon :size="22" color="var(--color-primary)" style="margin-right: 8px; flex-shrink: 0">
+        <NIcon :size="20" color="var(--color-primary)" style="flex-shrink: 0">
           <WarningOutline />
         </NIcon>
-        <span>{{ t('app.confirm-exit-message') }}</span>
+        <span>{{ t('app.close-action-message') }}</span>
+      </div>
+      <div class="remember-choice">
+        <NCheckbox v-model:checked="rememberChoice">
+          {{ t('app.remember-close-choice') }}
+        </NCheckbox>
       </div>
       <template #footer>
-        <NSpace justify="end">
+        <NSpace justify="center">
           <NButton class="exit-btn" @click="handleExitCancel">
-            {{ t('app.no') }}
+            {{ t('app.cancel') }}
+          </NButton>
+          <NButton class="exit-btn" @click="handleMinimizeToTray">
+            {{ t('app.minimize-to-tray') }}
           </NButton>
           <NButton class="exit-btn" type="warning" @click="handleExitConfirm">
-            {{ t('app.yes') }}
+            {{ t('app.quit-app') }}
           </NButton>
         </NSpace>
       </template>
@@ -364,12 +404,21 @@ onUnmounted(() => {
 .exit-dialog-body {
   display: flex;
   align-items: center;
+  justify-content: center;
+  gap: 10px;
   font-size: 14px;
   line-height: 1.6;
-  padding: 4px 0;
+  padding: 8px 0 4px;
 }
 .exit-btn {
-  min-width: 80px;
-  padding: 0 24px;
+  min-width: 88px;
+  padding: 0 20px;
+}
+.remember-choice {
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+  font-size: 13px;
+  opacity: 0.85;
 }
 </style>

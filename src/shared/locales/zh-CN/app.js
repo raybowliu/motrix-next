@@ -45,5 +45,10 @@ export default {
   'menu-open-torrent': '打开种子文件...',
   'menu-preferences': '偏好设置...',
   'menu-release-notes': '更新日志',
-  'menu-report-issue': '反馈问题'
+  'menu-report-issue': '反馈问题',
+  'close-action-title': '关闭确认',
+  'close-action-message': '最小化到托盘继续运行，还是退出？',
+  'minimize-to-tray': '最小化到托盘',
+  'remember-close-choice': '以后直接最小化到托盘',
+  'quit-app': '退出'
 }
