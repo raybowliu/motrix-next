@@ -134,6 +134,8 @@ export default {
   'engine-restart-now': '今すぐ再起動',
   'engine-restart-later': '後で',
   'engine-restarting': 'エンジンを再起動中...',
+  'engine-restart-btn': 'エンジンを再起動',
+  'engine-restart-manual-confirm': 'ダウンロードエンジンを再起動しますか？アクティブなダウンロードは一時的に中断されますが、再起動後に自動的に再開されます。',
   'restore-defaults': 'デフォルトに戻す',
   'restore-defaults-confirm': 'すべての設定が初期値にリセットされます。この操作は元に戻せません。',
   'restore-defaults-success': 'デフォルト設定に戻しました',

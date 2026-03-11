@@ -134,6 +134,8 @@ export default {
   'engine-restart-now': 'Repornește acum',
   'engine-restart-later': 'Mai târziu',
   'engine-restarting': 'Repornire motor...',
+  'engine-restart-btn': 'Repornire motor',
+  'engine-restart-manual-confirm': 'Doriți să reporniți motorul de descărcare? Descărcările active vor fi întrerupte temporar, dar vor fi reluate automat după repornire.',
   'restore-defaults': 'Restaurare setări implicite',
   'restore-defaults-confirm': 'Toate setările vor fi resetate la valorile implicite. Această acțiune nu poate fi anulată.',
   'restore-defaults-success': 'Setările implicite au fost restaurate',

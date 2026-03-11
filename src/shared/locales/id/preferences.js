@@ -134,6 +134,8 @@ export default {
   'engine-restart-now': 'Mulai ulang sekarang',
   'engine-restart-later': 'Nanti',
   'engine-restarting': 'Memulai ulang mesin...',
+  'engine-restart-btn': 'Mulai Ulang Mesin',
+  'engine-restart-manual-confirm': 'Mulai ulang mesin unduhan? Unduhan aktif akan terganggu sebentar tetapi akan dilanjutkan secara otomatis setelah dimulai ulang.',
   'restore-defaults': 'Kembalikan ke default',
   'restore-defaults-confirm': 'Semua pengaturan akan direset ke nilai default. Tindakan ini tidak dapat dibatalkan.',
   'restore-defaults-success': 'Default dikembalikan',

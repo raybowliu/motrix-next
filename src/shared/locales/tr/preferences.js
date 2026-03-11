@@ -134,6 +134,8 @@ export default {
   'engine-restart-now': 'Şimdi yeniden başlat',
   'engine-restart-later': 'Daha sonra',
   'engine-restarting': 'Motor yeniden başlatılıyor...',
+  'engine-restart-btn': 'Motoru yeniden başlat',
+  'engine-restart-manual-confirm': 'İndirme motorunu yeniden başlatmak istiyor musunuz? Aktif indirmeler kısa süreliğine kesintiye uğrayacak ancak yeniden başlatmanın ardından otomatik olarak devam edecektir.',
   'restore-defaults': 'Varsayılanları geri yükle',
   'restore-defaults-confirm': 'Tüm ayarlar fabrika varsayılanlarına sıfırlanacaktır. Bu işlem geri alınamaz.',
   'restore-defaults-success': 'Varsayılanlar geri yüklendi',

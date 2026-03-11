@@ -134,6 +134,8 @@ export default {
   'engine-restart-now': 'Riavvia ora',
   'engine-restart-later': 'Più tardi',
   'engine-restarting': 'Riavvio del motore...',
+  'engine-restart-btn': 'Riavvia motore',
+  'engine-restart-manual-confirm': 'Vuoi riavviare il motore di download? I download attivi verranno brevemente interrotti ma riprenderanno automaticamente dopo il riavvio.',
   'restore-defaults': 'Ripristina predefiniti',
   'restore-defaults-confirm': 'Tutte le impostazioni verranno ripristinate ai valori predefiniti. Questa azione non può essere annullata.',
   'restore-defaults-success': 'Predefiniti ripristinati',

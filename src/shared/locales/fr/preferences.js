@@ -134,6 +134,8 @@ export default {
   'engine-restart-now': 'Redémarrer maintenant',
   'engine-restart-later': 'Plus tard',
   'engine-restarting': 'Redémarrage du moteur...',
+  'engine-restart-btn': 'Redémarrer le moteur',
+  'engine-restart-manual-confirm': 'Voulez-vous redémarrer le moteur de téléchargement ? Les téléchargements actifs seront brièvement interrompus mais reprendront automatiquement après le redémarrage.',
   'restore-defaults': 'Restaurer les paramètres par défaut',
   'restore-defaults-confirm': 'Tous les paramètres seront réinitialisés aux valeurs par défaut. Cette action est irréversible.',
   'restore-defaults-success': 'Paramètres par défaut restaurés',

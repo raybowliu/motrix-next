@@ -42,6 +42,11 @@
   --m3-success: #386a20;
   --m3-on-success: #ffffff;
 
+  /* ── M3 Tertiary (Green-gray — special operations) ──────────────── */
+  --m3-tertiary: #4a6547;
+  --m3-on-tertiary: #ffffff;
+  --m3-tertiary-container: rgba(74, 101, 71, 0.12);
+
   /* ── M3 Warning (maps to Primary for amber brand) ──────────────── */
   --m3-warning: #7c5800;
   --m3-on-warning: #ffffff;
@@ -187,6 +192,11 @@
   /* ── M3 Success (Extended — lighter in dark) ────────────────────── */
   --m3-success: #8edb6a;
   --m3-on-success: #0a3900;
+
+  /* ── M3 Tertiary (Green-gray — lighter in dark) ─────────────────── */
+  --m3-tertiary: #a1d09a;
+  --m3-on-tertiary: #0d3a0a;
+  --m3-tertiary-container: rgba(161, 208, 154, 0.15);
 
   /* ── M3 Warning ────────────────────────────────────────────────── */
   --m3-warning: #f0bf48;

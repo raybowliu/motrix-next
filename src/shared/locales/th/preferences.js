@@ -134,6 +134,8 @@ export default {
   'engine-restart-now': 'รีสตาร์ททันที',
   'engine-restart-later': 'ภายหลัง',
   'engine-restarting': 'กำลังรีสตาร์ทเอนจิน...',
+  'engine-restart-btn': 'รีสตาร์ทเอ็นจิ้น',
+  'engine-restart-manual-confirm': 'รีสตาร์ทเอ็นจิ้นดาวน์โหลดหรือไม่? การดาวน์โหลดที่ใช้งานอยู่จะหยุดชั่วคราวแต่จะดำเนินการต่อโดยอัตโนมัติหลังจากรีสตาร์ท',
   'restore-defaults': 'คืนค่าเริ่มต้น',
   'restore-defaults-confirm': 'การตั้งค่าทั้งหมดจะถูกรีเซ็ตเป็นค่าเริ่มต้นจากโรงงาน ไม่สามารถยกเลิกการดำเนินการนี้ได้',
   'restore-defaults-success': 'คืนค่าเริ่มต้นแล้ว',

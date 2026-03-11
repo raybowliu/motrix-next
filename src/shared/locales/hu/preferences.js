@@ -134,6 +134,8 @@ export default {
   'engine-restart-now': 'Újraindítás most',
   'engine-restart-later': 'Később',
   'engine-restarting': 'Motor újraindítása...',
+  'engine-restart-btn': 'Motor újraindítása',
+  'engine-restart-manual-confirm': 'Újra szeretné indítani a letöltő motort? Az aktív letöltések rövid időre megszakadnak, de az újraindítás után automatikusan folytatódnak.',
   'restore-defaults': 'Alapértelmezések visszaállítása',
   'restore-defaults-confirm': 'Minden beállítás visszaáll a gyári alapértékekre. Ez a művelet nem vonható vissza.',
   'restore-defaults-success': 'Alapértelmezések visszaállítva',

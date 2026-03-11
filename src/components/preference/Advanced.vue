@@ -39,7 +39,7 @@ import {
   useDialog,
 } from 'naive-ui'
 import { useAppMessage } from '@/composables/useAppMessage'
-import { SyncOutline, DiceOutline } from '@vicons/ionicons5'
+import { SyncOutline, DiceOutline, RefreshOutline } from '@vicons/ionicons5'
 import { logger } from '@shared/logger'
 import PreferenceActionBar from './PreferenceActionBar.vue'
 
@@ -298,6 +298,27 @@ function changeUA(type: string) {
   if (ua) form.value.userAgent = ua
 }
 
+function handleManualRestart() {
+  const port = form.value.rpcListenPort || ENGINE_RPC_PORT
+  const secret = form.value.rpcSecret || ''
+  const d = dialog.warning({
+    title: t('preferences.engine-restart-title'),
+    content: t('preferences.engine-restart-manual-confirm'),
+    positiveText: t('preferences.engine-restart-now'),
+    negativeText: t('preferences.engine-restart-later'),
+    maskClosable: false,
+    onPositiveClick: async () => {
+      d.loading = true
+      d.negativeText = ''
+      d.closable = false
+      message.info(t('preferences.engine-restarting'), { duration: 2000 })
+      await nextTick()
+      await new Promise((r) => requestAnimationFrame(r))
+      await restartEngine({ port, secret })
+    },
+  })
+}
+
 function handleSessionReset() {
   dialog.warning({
     title: t('preferences.session-reset'),
@@ -494,6 +515,14 @@ onMounted(() => {
           </NButton>
         </NInputGroup>
       </NFormItem>
+      <NFormItem :show-label="false">
+        <NButton class="restart-engine-btn" ghost @click="handleManualRestart">
+          <template #icon>
+            <NIcon><RefreshOutline /></NIcon>
+          </template>
+          {{ t('preferences.engine-restart-btn') }}
+        </NButton>
+      </NFormItem>
 
       <NDivider title-placement="left">{{ t('preferences.port') }}</NDivider>
       <NFormItem label="UPnP/NAT-PMP">
@@ -610,5 +639,26 @@ onMounted(() => {
   bottom: 0;
   z-index: 10;
   padding: 16px 24px 16px 40px;
+}
+
+/* ── Restart Engine — M3 Tertiary ghost button ───────────────────── */
+.restart-engine-btn {
+  color: var(--m3-tertiary) !important;
+  border-color: var(--m3-tertiary) !important;
+  transition:
+    color 0.35s cubic-bezier(0.2, 0, 0, 1),
+    background-color 0.35s cubic-bezier(0.2, 0, 0, 1),
+    border-color 0.35s cubic-bezier(0.2, 0, 0, 1);
+}
+.restart-engine-btn:hover {
+  background-color: var(--m3-tertiary-container) !important;
+}
+.restart-engine-btn :deep(.n-button__border) {
+  border-color: var(--m3-tertiary) !important;
+  transition: border-color 0.35s cubic-bezier(0.2, 0, 0, 1);
+}
+.restart-engine-btn :deep(.n-button__state-border) {
+  border-color: var(--m3-tertiary) !important;
+  transition: border-color 0.35s cubic-bezier(0.2, 0, 0, 1);
 }
 </style>

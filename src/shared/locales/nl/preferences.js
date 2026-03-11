@@ -134,6 +134,8 @@ export default {
   'engine-restart-now': 'Nu herstarten',
   'engine-restart-later': 'Later',
   'engine-restarting': 'Engine wordt herstart...',
+  'engine-restart-btn': 'Engine herstarten',
+  'engine-restart-manual-confirm': 'Wilt u de downloadengine herstarten? Actieve downloads worden kort onderbroken maar worden automatisch hervat na het herstarten.',
   'restore-defaults': 'Standaardwaarden herstellen',
   'restore-defaults-confirm': 'Alle instellingen worden teruggezet naar de fabrieksinstellingen. Dit kan niet ongedaan worden gemaakt.',
   'restore-defaults-success': 'Standaardwaarden hersteld',

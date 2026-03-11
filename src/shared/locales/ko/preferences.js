@@ -134,6 +134,8 @@ export default {
   'engine-restart-now': '지금 재시작',
   'engine-restart-later': '나중에',
   'engine-restarting': '엔진 재시작 중...',
+  'engine-restart-btn': '엔진 재시작',
+  'engine-restart-manual-confirm': '다운로드 엔진을 재시작하시겠습니까? 활성 다운로드가 잠시 중단되지만 재시작 후 자동으로 재개됩니다.',
   'restore-defaults': '기본값 복원',
   'restore-defaults-confirm': '모든 설정이 기본값으로 초기화됩니다. 이 작업은 취소할 수 없습니다.',
   'restore-defaults-success': '기본값이 복원되었습니다',

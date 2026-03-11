@@ -134,6 +134,8 @@ export default {
   'engine-restart-now': 'Start på nytt nå',
   'engine-restart-later': 'Senere',
   'engine-restarting': 'Starter motoren på nytt...',
+  'engine-restart-btn': 'Start motoren på nytt',
+  'engine-restart-manual-confirm': 'Vil du starte nedlastingsmotoren på nytt? Aktive nedlastinger vil bli kort avbrutt, men gjenopptas automatisk etter omstart.',
   'restore-defaults': 'Gjenopprett standardinnstillinger',
   'restore-defaults-confirm': 'Alle innstillinger vil bli tilbakestilt til fabrikkinnstillinger. Dette kan ikke angres.',
   'restore-defaults-success': 'Standardinnstillinger gjenopprettet',

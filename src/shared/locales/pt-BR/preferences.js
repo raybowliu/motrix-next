@@ -134,6 +134,8 @@ export default {
   'engine-restart-now': 'Reiniciar agora',
   'engine-restart-later': 'Mais tarde',
   'engine-restarting': 'Reiniciando motor...',
+  'engine-restart-btn': 'Reiniciar motor',
+  'engine-restart-manual-confirm': 'Deseja reiniciar o motor de download? Os downloads ativos serão interrompidos brevemente, mas serão retomados automaticamente após a reinicialização.',
   'restore-defaults': 'Restaurar padrões',
   'restore-defaults-confirm': 'Todas as configurações serão redefinidas para os valores padrão. Esta ação não pode ser desfeita.',
   'restore-defaults-success': 'Padrões restaurados',

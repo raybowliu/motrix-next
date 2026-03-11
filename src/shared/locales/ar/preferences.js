@@ -134,6 +134,8 @@ export default {
   'engine-restart-now': 'إعادة التشغيل الآن',
   'engine-restart-later': 'لاحقاً',
   'engine-restarting': 'جارٍ إعادة تشغيل المحرك...',
+  'engine-restart-btn': 'إعادة تشغيل المحرك',
+  'engine-restart-manual-confirm': 'هل تريد إعادة تشغيل محرك التنزيل؟ ستتوقف التنزيلات النشطة مؤقتًا ولكنها ستستأنف تلقائيًا بعد إعادة التشغيل.',
   'restore-defaults': 'استعادة الإعدادات الافتراضية',
   'restore-defaults-confirm': 'ستتم إعادة جميع الإعدادات إلى القيم الافتراضية. لا يمكن التراجع عن هذا الإجراء.',
   'restore-defaults-success': 'تمت استعادة الإعدادات الافتراضية',

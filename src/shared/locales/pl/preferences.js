@@ -134,6 +134,8 @@ export default {
   'engine-restart-now': 'Uruchom ponownie teraz',
   'engine-restart-later': 'Później',
   'engine-restarting': 'Ponowne uruchamianie silnika...',
+  'engine-restart-btn': 'Uruchom ponownie silnik',
+  'engine-restart-manual-confirm': 'Czy chcesz ponownie uruchomić silnik pobierania? Aktywne pobierania zostaną na chwilę przerwane, ale zostaną automatycznie wznowione po ponownym uruchomieniu.',
   'restore-defaults': 'Przywróć ustawienia domyślne',
   'restore-defaults-confirm': 'Wszystkie ustawienia zostaną przywrócone do wartości fabrycznych. Tej operacji nie można cofnąć.',
   'restore-defaults-success': 'Ustawienia domyślne przywrócone',

@@ -134,6 +134,8 @@ export default {
   'engine-restart-now': '立即重启',
   'engine-restart-later': '稍后',
   'engine-restarting': '正在重启引擎...',
+  'engine-restart-btn': '重启引擎',
+  'engine-restart-manual-confirm': '是否重启下载引擎？正在进行的下载将短暂中断，但会在重启后自动恢复。',
   'restore-defaults': '恢复默认设置',
   'restore-defaults-confirm': '所有设置将恢复为出厂默认值，此操作不可撤销。',
   'restore-defaults-success': '已恢复默认设置',

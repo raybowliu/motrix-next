@@ -134,6 +134,8 @@ export default {
   'engine-restart-now': 'Khởi động lại ngay',
   'engine-restart-later': 'Để sau',
   'engine-restarting': 'Đang khởi động lại engine...',
+  'engine-restart-btn': 'Khởi động lại engine',
+  'engine-restart-manual-confirm': 'Khởi động lại engine tải xuống? Các bản tải đang hoạt động sẽ bị gián đoạn tạm thời nhưng sẽ tự động tiếp tục sau khi khởi động lại.',
   'restore-defaults': 'Khôi phục mặc định',
   'restore-defaults-confirm': 'Tất cả cài đặt sẽ được đặt lại về giá trị mặc định. Hành động này không thể hoàn tác.',
   'restore-defaults-success': 'Đã khôi phục mặc định',

@@ -134,6 +134,8 @@ export default {
   'engine-restart-now': 'Jetzt neu starten',
   'engine-restart-later': 'Später',
   'engine-restarting': 'Engine wird neu gestartet...',
+  'engine-restart-btn': 'Engine neu starten',
+  'engine-restart-manual-confirm': 'Möchten Sie die Download-Engine neu starten? Aktive Downloads werden kurz unterbrochen, aber nach dem Neustart automatisch fortgesetzt.',
   'restore-defaults': 'Standardeinstellungen wiederherstellen',
   'restore-defaults-confirm': 'Alle Einstellungen werden auf Werkseinstellungen zurückgesetzt. Dies kann nicht rückgängig gemacht werden.',
   'restore-defaults-success': 'Standardeinstellungen wiederhergestellt',

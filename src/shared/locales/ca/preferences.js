@@ -134,6 +134,8 @@ export default {
   'engine-restart-now': 'Reiniciar ara',
   'engine-restart-later': 'Més tard',
   'engine-restarting': 'Reiniciant el motor...',
+  'engine-restart-btn': 'Reiniciar el motor',
+  'engine-restart-manual-confirm': 'Voleu reiniciar el motor de descàrregues? Les descàrregues actives s\'interrompran temporalment, però es reprendran automàticament després del reinici.',
   'restore-defaults': 'Restaurar valors predeterminats',
   'restore-defaults-confirm': 'Tots els paràmetres es restabliran als valors predeterminats. Aquesta acció no es pot desfer.',
   'restore-defaults-success': 'S\'han restaurat els valors predeterminats',

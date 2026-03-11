@@ -134,6 +134,8 @@ export default {
   'engine-restart-now': 'Restart Now',
   'engine-restart-later': 'Later',
   'engine-restarting': 'Restarting engine...',
+  'engine-restart-btn': 'Restart Engine',
+  'engine-restart-manual-confirm': 'Restart the download engine? Active downloads will be briefly interrupted but will resume automatically after restart.',
   'restore-defaults': 'Restore Defaults',
   'restore-defaults-confirm': 'All settings will be reset to factory defaults. This cannot be undone.',
   'restore-defaults-success': 'Defaults restored',
