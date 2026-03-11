@@ -16,8 +16,13 @@ function toggleMaximize() {
   appWindow.toggleMaximize()
 }
 
-function close() {
+async function close() {
   if (preferenceStore.config.minimizeToTrayOnClose) {
+    // Signal Rust to hide the Dock icon if the user opted in.
+    // The Rust command reads the preference from the persistent store.
+    const { invoke } = await import('@tauri-apps/api/core')
+    await invoke('set_dock_visible', { visible: false })
+
     appWindow.hide()
   } else {
     appWindow.close()

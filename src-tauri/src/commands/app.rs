@@ -234,19 +234,32 @@ pub fn update_dock_badge(app: AppHandle, label: String) -> Result<(), AppError> 
 }
 
 /// Toggles the macOS Dock icon visibility at runtime.
-/// `Accessory` hides the icon (menu-bar-only mode); `Regular` restores it.
+/// When `visible` is false, reads the `hideDockOnMinimize` preference from
+/// the persistent store — only hides the Dock icon if the user opted in.
+/// When `visible` is true, always restores the icon (e.g. on Reopen / tray show).
 /// No-op on non-macOS platforms.
 #[tauri::command]
 pub fn set_dock_visible(app: AppHandle, visible: bool) -> Result<(), AppError> {
     #[cfg(target_os = "macos")]
     {
         use tauri::ActivationPolicy;
-        let _ = app.set_activation_policy(if visible {
-            ActivationPolicy::Regular
+        use tauri_plugin_store::StoreExt;
+
+        if visible {
+            let _ = app.set_activation_policy(ActivationPolicy::Regular);
         } else {
-            ActivationPolicy::Accessory
-        });
+            let hide_dock = app
+                .store("config.json")
+                .ok()
+                .and_then(|s| s.get("preferences"))
+                .and_then(|p| p.get("hideDockOnMinimize")?.as_bool())
+                .unwrap_or(false);
+            if hide_dock {
+                let _ = app.set_activation_policy(ActivationPolicy::Accessory);
+            }
+        }
     }
+    #[cfg(not(target_os = "macos"))]
     let _ = (app, visible);
     Ok(())
 }

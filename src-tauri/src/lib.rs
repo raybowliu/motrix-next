@@ -224,16 +224,14 @@ pub fn run() {
                     return;
                 }
 
-                let should_hide = app
+                let store_prefs = app
                     .store("config.json")
                     .ok()
-                    .and_then(|s| s.get("preferences"))
-                    .map(|prefs| {
-                        prefs
-                            .get("minimizeToTrayOnClose")
-                            .and_then(|v| v.as_bool())
-                            .unwrap_or(false)
-                    })
+                    .and_then(|s| s.get("preferences"));
+
+                let should_hide = store_prefs
+                    .as_ref()
+                    .and_then(|p| p.get("minimizeToTrayOnClose")?.as_bool())
                     .unwrap_or(false);
 
                 if should_hide {
@@ -245,16 +243,9 @@ pub fn run() {
                     // Hide Dock icon when the user has opted in.
                     #[cfg(target_os = "macos")]
                     {
-                        let hide_dock = app
-                            .store("config.json")
-                            .ok()
-                            .and_then(|s| s.get("preferences"))
-                            .map(|prefs| {
-                                prefs
-                                    .get("hideDockOnMinimize")
-                                    .and_then(|v| v.as_bool())
-                                    .unwrap_or(false)
-                            })
+                        let hide_dock = store_prefs
+                            .as_ref()
+                            .and_then(|p| p.get("hideDockOnMinimize")?.as_bool())
                             .unwrap_or(false);
                         if hide_dock {
                             use tauri::ActivationPolicy;

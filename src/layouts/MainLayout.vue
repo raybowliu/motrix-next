@@ -120,6 +120,12 @@ async function onExitDialogAfterLeave() {
   if (pendingTrayHide.value) {
     pendingTrayHide.value = false
     const appWindow = getCurrentWindow()
+
+    // Signal Rust to hide the Dock icon if the user opted in.
+    // The Rust command reads the preference from the persistent store.
+    const { invoke } = await import('@tauri-apps/api/core')
+    await invoke('set_dock_visible', { visible: false })
+
     await appWindow.hide()
   }
 }
@@ -337,6 +343,11 @@ onMounted(async () => {
     // to exit. This covers all native close paths: taskbar close, Alt+F4,
     // GNOME Activities overview ×, and WM-level close signals on Wayland.
     if (preferenceStore.config.minimizeToTrayOnClose) {
+      // Signal Rust to hide the Dock icon if the user opted in.
+      // The Rust command reads the preference from the persistent store.
+      const { invoke } = await import('@tauri-apps/api/core')
+      await invoke('set_dock_visible', { visible: false })
+
       await appWindow.hide()
       return
     }
