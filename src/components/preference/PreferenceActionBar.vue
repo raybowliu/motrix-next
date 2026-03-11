@@ -72,21 +72,21 @@ const { t } = useI18n()
   transition: border-color 0.35s cubic-bezier(0.2, 0, 0, 1);
 }
 
-/* ── Discard — dirty state ────────────────────────────────────── */
+/* ── Discard — dirty state (error-container tonal fill) ─────────── */
 .discard-btn-dirty {
-  background-color: var(--m3-error) !important;
-  color: var(--m3-on-error) !important;
+  background-color: var(--m3-error-container) !important;
+  color: var(--m3-error) !important;
   transition:
     background-color 0.35s cubic-bezier(0.2, 0, 0, 1),
     color 0.35s cubic-bezier(0.2, 0, 0, 1),
     border-color 0.35s cubic-bezier(0.2, 0, 0, 1);
 }
 .discard-btn-dirty :deep(.n-button__border) {
-  border-color: var(--m3-error) !important;
+  border-color: var(--m3-error-container) !important;
   transition: border-color 0.35s cubic-bezier(0.2, 0, 0, 1);
 }
 .discard-btn-dirty :deep(.n-button__state-border) {
-  border-color: var(--m3-error) !important;
+  border-color: var(--m3-error-container) !important;
   transition: border-color 0.35s cubic-bezier(0.2, 0, 0, 1);
 }
 </style>
