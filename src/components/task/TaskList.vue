@@ -117,7 +117,7 @@ function handleItemClick(task: Aria2Task, event: MouseEvent) {
 .task-list-leave-active {
   transition: all 0.2s cubic-bezier(0.3, 0, 0.8, 0.15);
   position: absolute;
-  width: calc(100% - 72px);
+  width: 100%;
 }
 .task-list-enter-from {
   opacity: 0;

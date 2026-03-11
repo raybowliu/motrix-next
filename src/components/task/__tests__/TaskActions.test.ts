@@ -22,6 +22,7 @@ const mockResumeAllTask = vi.fn().mockResolvedValue(undefined)
 const mockPauseAllTask = vi.fn().mockResolvedValue(undefined)
 const mockPurgeTaskRecord = vi.fn().mockResolvedValue(undefined)
 const mockBatchRemoveTask = vi.fn().mockResolvedValue(undefined)
+const mockStopAllSeeding = vi.fn().mockResolvedValue(2)
 
 // Dialog mock: captures onPositiveClick so we can invoke it in tests
 let lastDialogOptions: Record<string, unknown> | null = null
@@ -69,6 +70,8 @@ vi.mock('@vicons/ionicons5', () => ({
   TrashOutline: { template: '<i />' },
   RefreshOutline: { template: '<i />' },
   CloseOutline: { template: '<i />' },
+  StopCircleOutline: { template: '<i />' },
+  SyncOutline: { template: '<i />' },
 }))
 
 vi.mock('@tauri-apps/api/core', () => ({
@@ -96,14 +99,23 @@ vi.mock('@/composables/useFileDelete', () => ({
 
 import TaskActions from '../TaskActions.vue'
 import { useTaskStore } from '@/stores/task'
+import { ref, type Ref } from 'vue'
 
 // ── Helpers ─────────────────────────────────────────────────────────
 
-const createWrapper = () => mount(TaskActions, { global: { plugins: [] } })
+/** Shared stoppingGids ref provided to component via provide/inject. */
+let stoppingGids: Ref<string[]>
+
+const createWrapper = () =>
+  mount(TaskActions, {
+    global: {
+      provide: { stoppingGids },
+    },
+  })
 
 /**
  * Click the Nth button in the component (0-indexed).
- * Button order in template: [0]Add [1]Refresh [2]ResumeAll [3]PauseAll [4]DeleteAll
+ * Button order in template: [0]Add [1]Refresh [2]ResumeAll [3]PauseAll [4]StopAllSeed [5]DeleteAll
  * When currentList === 'stopped': [0]Add [1]Refresh [2]Purge
  */
 async function clickButton(wrapper: ReturnType<typeof createWrapper>, index: number) {
@@ -121,6 +133,8 @@ describe('TaskActions', () => {
     mockIsEngineReady.mockReturnValue(true)
     lastDialogOptions = null
 
+    stoppingGids = ref<string[]>([])
+
     // Patch store methods so we can track calls without real IPC
     const taskStore = useTaskStore()
     taskStore.fetchList = mockFetchList
@@ -128,6 +142,7 @@ describe('TaskActions', () => {
     taskStore.pauseAllTask = mockPauseAllTask
     taskStore.purgeTaskRecord = mockPurgeTaskRecord
     taskStore.batchRemoveTask = mockBatchRemoveTask
+    taskStore.stopAllSeeding = mockStopAllSeeding
   })
 
   afterEach(() => {
@@ -141,11 +156,11 @@ describe('TaskActions', () => {
     expect(wrapper.find('.task-actions').exists()).toBe(true)
   })
 
-  it('renders all 5 action buttons when list is not stopped', () => {
+  it('renders all 6 action buttons when list is not stopped', () => {
     const wrapper = createWrapper()
     const buttons = wrapper.findAll('button')
-    // Add + Refresh + ResumeAll + PauseAll + DeleteAll = 5
-    expect(buttons.length).toBe(5)
+    // Add + Refresh + ResumeAll + PauseAll + StopAllSeed + DeleteAll = 6
+    expect(buttons.length).toBe(6)
   })
 
   // ── Engine Guard ────────────────────────────────────────────────
@@ -336,7 +351,7 @@ describe('TaskActions', () => {
     it('does nothing when task list is empty', async () => {
       const wrapper = createWrapper()
       // taskList is empty by default — the delete-all button should be disabled
-      const deleteBtn = wrapper.findAll('button')[4]
+      const deleteBtn = wrapper.findAll('button')[5]
       expect(deleteBtn.attributes('disabled')).toBeDefined()
     })
 
@@ -345,7 +360,7 @@ describe('TaskActions', () => {
       taskStore.taskList = [{ gid: 'g1' }, { gid: 'g2' }] as never
 
       const wrapper = createWrapper()
-      await clickButton(wrapper, 4) // Delete All
+      await clickButton(wrapper, 5) // Delete All
 
       expect(mockDialogWarning).toHaveBeenCalledOnce()
     })
@@ -355,7 +370,7 @@ describe('TaskActions', () => {
       taskStore.taskList = [{ gid: 'g1' }, { gid: 'g2' }, { gid: 'g3' }] as never
 
       const wrapper = createWrapper()
-      await clickButton(wrapper, 4) // Delete All
+      await clickButton(wrapper, 5) // Delete All
 
       const onPositiveClick = lastDialogOptions!.onPositiveClick as () => Promise<void>
       // onPositiveClick has internal setTimeout(50) — must advance timer
@@ -371,7 +386,7 @@ describe('TaskActions', () => {
       taskStore.taskList = [{ gid: 'g1' }] as never
 
       const wrapper = createWrapper()
-      await clickButton(wrapper, 4)
+      await clickButton(wrapper, 5)
 
       const onPositiveClick = lastDialogOptions!.onPositiveClick as () => Promise<void>
       const promise = onPositiveClick()
@@ -379,6 +394,60 @@ describe('TaskActions', () => {
       await promise
 
       expect(mockMessageSuccess).toHaveBeenCalled()
+    })
+  })
+
+  // ── Stop All Seeding Animation Linkage ──────────────────────────
+
+  describe('stop all seeding animation', () => {
+    it('pushes all seeder gids into stoppingGids on positive click', async () => {
+      const taskStore = useTaskStore()
+      taskStore.taskList = [
+        { gid: 's1', bittorrent: { info: { name: 'a' } }, seeder: 'true' },
+        { gid: 'a1' },
+        { gid: 's2', bittorrent: { info: { name: 'b' } }, seeder: 'true' },
+      ] as never
+
+      const wrapper = createWrapper()
+      await clickButton(wrapper, 4) // Stop All Seeding
+
+      // Simulate dialog confirm
+      const onPositiveClick = lastDialogOptions!.onPositiveClick as () => Promise<void>
+      await onPositiveClick()
+
+      expect(stoppingGids.value).toContain('s1')
+      expect(stoppingGids.value).toContain('s2')
+      expect(stoppingGids.value).not.toContain('a1')
+    })
+
+    it('shows spinning icon on toolbar button during batch stop', async () => {
+      const taskStore = useTaskStore()
+      taskStore.taskList = [{ gid: 's1', bittorrent: { info: { name: 'x' } }, seeder: 'true' }] as never
+
+      // Use a never-resolving promise to keep the button in spinning state
+      mockStopAllSeeding.mockReturnValueOnce(new Promise(() => {}))
+
+      const wrapper = createWrapper()
+      await clickButton(wrapper, 4)
+
+      const onPositiveClick = lastDialogOptions!.onPositiveClick as () => Promise<void>
+      onPositiveClick() // Don't await — it's pending
+      await wrapper.vm.$nextTick()
+
+      expect(wrapper.find('.stop-all-spinning').exists()).toBe(true)
+    })
+
+    it('calls stopAllSeeding store method on confirm', async () => {
+      const taskStore = useTaskStore()
+      taskStore.taskList = [{ gid: 's1', bittorrent: { info: { name: 'x' } }, seeder: 'true' }] as never
+
+      const wrapper = createWrapper()
+      await clickButton(wrapper, 4)
+
+      const onPositiveClick = lastDialogOptions!.onPositiveClick as () => Promise<void>
+      await onPositiveClick()
+
+      expect(mockStopAllSeeding).toHaveBeenCalledOnce()
     })
   })
 })

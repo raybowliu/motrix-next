@@ -337,6 +337,45 @@ describe('TaskStore', () => {
     expect(mockApi.changeOption).toHaveBeenCalledWith({ gid: 'gid1', options: { seedTime: '0' } })
   })
 
+  // ─── stopAllSeeding ─────────────────────────────────────
+
+  it('stopAllSeeding sets seedTime to 0 for every seeding task', async () => {
+    const seeder1 = makeMockTask('s1', 'active', { bittorrent: { info: { name: 'a' } }, seeder: 'true' })
+    const seeder2 = makeMockTask('s2', 'active', { bittorrent: { info: { name: 'b' } }, seeder: 'true' })
+    store.taskList = [seeder1, seeder2]
+    const count = await store.stopAllSeeding()
+    expect(count).toBe(2)
+    expect(mockApi.changeOption).toHaveBeenCalledWith({ gid: 's1', options: { seedTime: '0' } })
+    expect(mockApi.changeOption).toHaveBeenCalledWith({ gid: 's2', options: { seedTime: '0' } })
+  })
+
+  it('stopAllSeeding skips non-seeding tasks', async () => {
+    const active = makeMockTask('a1', 'active')
+    const seeder = makeMockTask('s1', 'active', { bittorrent: { info: { name: 'x' } }, seeder: 'true' })
+    store.taskList = [active, seeder]
+    const count = await store.stopAllSeeding()
+    expect(count).toBe(1)
+    expect(mockApi.changeOption).toHaveBeenCalledTimes(1)
+    expect(mockApi.changeOption).toHaveBeenCalledWith({ gid: 's1', options: { seedTime: '0' } })
+  })
+
+  it('stopAllSeeding returns 0 when no seeding tasks exist', async () => {
+    store.taskList = [makeMockTask('a1', 'active')]
+    const count = await store.stopAllSeeding()
+    expect(count).toBe(0)
+    expect(mockApi.changeOption).not.toHaveBeenCalled()
+  })
+
+  it('stopAllSeeding continues even if one task fails', async () => {
+    const seeder1 = makeMockTask('s1', 'active', { bittorrent: { info: { name: 'a' } }, seeder: 'true' })
+    const seeder2 = makeMockTask('s2', 'active', { bittorrent: { info: { name: 'b' } }, seeder: 'true' })
+    store.taskList = [seeder1, seeder2]
+    mockApi.changeOption.mockRejectedValueOnce(new Error('fail'))
+    const count = await store.stopAllSeeding()
+    expect(count).toBe(2)
+    expect(mockApi.changeOption).toHaveBeenCalledTimes(2)
+  })
+
   // ─── removeTaskRecord ───────────────────────────────────
 
   it('removeTaskRecord removes completed task record', async () => {

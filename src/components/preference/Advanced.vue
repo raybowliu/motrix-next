@@ -409,32 +409,24 @@ onMounted(() => {
       <NFormItem :label="t('preferences.enable-proxy')">
         <NSwitch v-model:value="form.proxy.enable" />
       </NFormItem>
-      <template v-if="form.proxy.enable">
-        <NFormItem :label="t('preferences.proxy-server')">
-          <NInput v-model:value="form.proxy.server" placeholder="[http://][USER:PASSWORD@]HOST[:PORT]" />
-        </NFormItem>
-        <NFormItem label="Bypass">
-          <NInput
-            v-model:value="form.proxy.bypass"
-            type="textarea"
-            :autosize="{ minRows: 2, maxRows: 3 }"
-            :placeholder="t('preferences.proxy-bypass-input-tips')"
-          />
-        </NFormItem>
-        <NFormItem label="Scope">
-          <NSelect v-model:value="form.proxy.scope" :options="proxyScopeOptions" multiple style="width: 100%" />
-        </NFormItem>
-        <NFormItem :show-label="false">
-          <a
-            target="_blank"
-            href="https://github.com/AnInsomniacy/motrix-next/wiki/Proxy"
-            rel="noopener noreferrer"
-            class="info-link"
-          >
-            {{ t('preferences.proxy-tips') }} ↗
-          </a>
-        </NFormItem>
-      </template>
+      <div class="proxy-collapse" :class="{ 'proxy-collapse--open': form.proxy.enable }">
+        <div class="proxy-collapse__inner">
+          <NFormItem :label="t('preferences.proxy-server')">
+            <NInput v-model:value="form.proxy.server" placeholder="[http://][USER:PASSWORD@]HOST[:PORT]" />
+          </NFormItem>
+          <NFormItem label="Bypass">
+            <NInput
+              v-model:value="form.proxy.bypass"
+              type="textarea"
+              :autosize="{ minRows: 2, maxRows: 3 }"
+              :placeholder="t('preferences.proxy-bypass-input-tips')"
+            />
+          </NFormItem>
+          <NFormItem label="Scope">
+            <NSelect v-model:value="form.proxy.scope" :options="proxyScopeOptions" multiple style="width: 100%" />
+          </NFormItem>
+        </div>
+      </div>
 
       <NDivider title-placement="left">{{ t('preferences.bt-tracker') }}</NDivider>
       <NFormItem :label="t('preferences.bt-tracker-source')">
@@ -660,5 +652,18 @@ onMounted(() => {
 .restart-engine-btn :deep(.n-button__state-border) {
   border-color: var(--m3-tertiary) !important;
   transition: border-color 0.35s cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* ── Proxy collapse — CSS Grid 0fr→1fr for glitch-free height:auto ── */
+.proxy-collapse {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s cubic-bezier(0.2, 0, 0, 1);
+}
+.proxy-collapse--open {
+  grid-template-rows: 1fr;
+}
+.proxy-collapse__inner {
+  overflow: hidden;
 }
 </style>

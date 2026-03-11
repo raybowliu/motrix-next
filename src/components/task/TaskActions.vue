@@ -1,16 +1,26 @@
 <script setup lang="ts">
 /** @fileoverview Batch task action buttons: resume all, pause all, delete all, purge. */
-import { ref, computed, h } from 'vue'
+import { ref, computed, h, inject, type Ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAppStore } from '@/stores/app'
 import { useTaskStore } from '@/stores/task'
 
 import { isEngineReady } from '@/api/aria2'
+import { checkTaskIsSeeder } from '@shared/utils/task'
 import { deleteTaskFiles } from '@/composables/useFileDelete'
 import { logger } from '@shared/logger'
 import { NButton, NIcon, NTooltip, NCheckbox, useDialog } from 'naive-ui'
 import { useAppMessage } from '@/composables/useAppMessage'
-import { AddOutline, PlayOutline, PauseOutline, TrashOutline, RefreshOutline, CloseOutline } from '@vicons/ionicons5'
+import {
+  AddOutline,
+  PlayOutline,
+  PauseOutline,
+  TrashOutline,
+  RefreshOutline,
+  CloseOutline,
+  StopCircleOutline,
+  SyncOutline,
+} from '@vicons/ionicons5'
 
 const { t } = useI18n()
 const appStore = useAppStore()
@@ -19,10 +29,13 @@ const message = useAppMessage()
 const dialog = useDialog()
 
 const refreshing = ref(false)
+const stoppingAllSeeding = ref(false)
 let refreshTimer: ReturnType<typeof setTimeout> | null = null
 
+const stoppingGids = inject<Ref<string[]>>('stoppingGids')
 const currentList = computed(() => taskStore.currentList)
 const allGids = computed(() => taskStore.taskList.map((t: { gid: string }) => t.gid))
+const hasSeeders = computed(() => taskStore.taskList.some(checkTaskIsSeeder))
 
 function showAddTask() {
   appStore.showAddTaskDialog()
@@ -119,6 +132,40 @@ function pauseAll() {
         .pauseAllTask()
         .then(() => message.success(t('task.pause-all-task-success')))
         .catch(() => message.error(t('task.pause-all-task-fail')))
+    },
+  })
+}
+
+function stopAllSeeding() {
+  if (!isEngineReady()) {
+    message.warning(t('app.engine-not-ready'))
+    return
+  }
+  if (!hasSeeders.value) {
+    message.info(t('task.stop-all-seeding-none'))
+    return
+  }
+  dialog.warning({
+    title: t('task.stop-all-seeding'),
+    content: t('task.stop-all-seeding-confirm'),
+    positiveText: t('app.yes'),
+    negativeText: t('app.no'),
+    onPositiveClick: async () => {
+      // 1. Push seeder gids into shared stoppingGids → triggers card spin animations
+      const seederGids = taskStore.taskList.filter(checkTaskIsSeeder).map((t) => t.gid)
+      if (stoppingGids) {
+        stoppingGids.value = [...stoppingGids.value, ...seederGids]
+      }
+      // 2. Set toolbar button spinning state
+      stoppingAllSeeding.value = true
+      try {
+        await taskStore.stopAllSeeding()
+        message.success(t('task.stop-all-seeding-success'))
+      } catch {
+        message.error(t('task.stop-all-seeding-fail'))
+      } finally {
+        stoppingAllSeeding.value = false
+      }
     },
   })
 }
@@ -250,6 +297,28 @@ function onBtnRelease(ev: PointerEvent) {
           quaternary
           circle
           size="small"
+          :disabled="!hasSeeders || stoppingAllSeeding"
+          @pointerdown="onBtnPress"
+          @pointerup="onBtnRelease"
+          @pointerleave="onBtnRelease"
+          @click="stopAllSeeding"
+        >
+          <template #icon>
+            <NIcon :class="{ 'stop-all-spinning': stoppingAllSeeding }">
+              <SyncOutline v-if="stoppingAllSeeding" />
+              <StopCircleOutline v-else />
+            </NIcon>
+          </template>
+        </NButton>
+      </template>
+      {{ t('task.stop-all-seeding') }}
+    </NTooltip>
+    <NTooltip v-if="currentList !== 'stopped'">
+      <template #trigger>
+        <NButton
+          quaternary
+          circle
+          size="small"
           :disabled="allGids.length === 0"
           @pointerdown="onBtnPress"
           @pointerup="onBtnRelease"
@@ -308,6 +377,11 @@ function onBtnRelease(ev: PointerEvent) {
 }
 .spinning {
   animation: spin 0.6s cubic-bezier(0.2, 0, 0, 1);
+  display: inline-block;
+  transform-origin: center;
+}
+.stop-all-spinning {
+  animation: spin 0.9s linear infinite;
   display: inline-block;
   transform-origin: center;
 }

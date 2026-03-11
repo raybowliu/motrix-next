@@ -2,7 +2,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { EMPTY_STRING, TASK_STATUS } from '@shared/constants'
-import { checkTaskIsBT, getTaskUris, intersection } from '@shared/utils'
+import { checkTaskIsBT, checkTaskIsSeeder, getTaskUris, intersection } from '@shared/utils'
 import { logger } from '@shared/logger'
 import type {
   Aria2Task,
@@ -257,6 +257,14 @@ export const useTaskStore = defineStore('task', () => {
     return changeTaskOption({ gid, options: { seedTime: '0' } })
   }
 
+  /** Stops ALL currently seeding tasks. Returns the count of seeding tasks found. */
+  async function stopAllSeeding(): Promise<number> {
+    const seeders = taskList.value.filter(checkTaskIsSeeder)
+    if (seeders.length === 0) return 0
+    await Promise.allSettled(seeders.map((t) => stopSeeding(t.gid)))
+    return seeders.length
+  }
+
   async function removeTaskRecord(task: Aria2Task) {
     const { gid, status } = task
     if (gid === currentTaskGid.value) hideTaskDetail()
@@ -403,6 +411,7 @@ export const useTaskStore = defineStore('task', () => {
     addToSeedingList,
     removeFromSeedingList,
     stopSeeding,
+    stopAllSeeding,
     removeTaskRecord,
     purgeTaskRecord,
     saveSession,
