@@ -2455,7 +2455,7 @@ dependencies = [
 
 [[package]]
 name = "motrix-next"
-version = "3.0.3"
+version = "3.0.4"
 dependencies = [
  "igd-next",
  "log",
