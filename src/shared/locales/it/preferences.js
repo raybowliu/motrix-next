@@ -40,7 +40,7 @@ export default {
   'theme-auto': 'Automatico',
   'theme-light': 'Chiaro',
   'theme-dark': 'Scuro',
-  'auto-hide-window': 'Avvia ridotto a icona nell\'area di notifica',
+  'auto-hide-window': 'Minimizza nella barra di sistema all\'avvio automatico',
   'minimize-to-tray-on-close': 'Riduci a icona nella barra delle applicazioni alla chiusura',
   'hide-dock-on-minimize': 'Nascondi icona Dock quando minimizzato (macOS)',
   'run-mode': 'Modalità di esecuzione',

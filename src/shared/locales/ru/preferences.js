@@ -40,7 +40,7 @@ export default {
   'theme-auto': 'Автоматически',
   'theme-light': 'Светлая',
   'theme-dark': 'Тёмная',
-  'auto-hide-window': 'Запускать свёрнутым в трей',
+  'auto-hide-window': 'Сворачивать в трей при автозапуске',
   'minimize-to-tray-on-close': 'Сворачивать в трей при закрытии',
   'hide-dock-on-minimize': 'Скрыть значок Dock при сворачивании (macOS)',
   'run-mode': 'Режим работы',

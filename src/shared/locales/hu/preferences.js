@@ -40,7 +40,7 @@ export default {
   'theme-auto': 'Automatikus',
   'theme-light': 'Világos',
   'theme-dark': 'Sötét',
-  'auto-hide-window': 'Indítás a tálcára kicsinyítve',
+  'auto-hide-window': 'Indításkor tálcára minimalizálás automatikus indításnál',
   'minimize-to-tray-on-close': 'Bezáráskor tálcára kicsinyítés',
   'hide-dock-on-minimize': 'Dock ikon elrejtése tálcára kicsinyítéskor (macOS)',
   'run-mode': 'Futási mód',

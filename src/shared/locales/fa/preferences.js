@@ -40,7 +40,7 @@ export default {
   'theme-auto': 'خودکار',
   'theme-light': 'روشن',
   'theme-dark': 'تیره',
-  'auto-hide-window': 'شروع به صورت کوچک‌شده در سینی سیستم',
+  'auto-hide-window': 'کمینه‌سازی به سینی سیستم هنگام شروع خودکار',
   'minimize-to-tray-on-close': 'کوچک‌سازی به سینی سیستم هنگام بستن',
   'hide-dock-on-minimize': 'مخفی کردن آیکون Dock هنگام کمینه‌سازی (macOS)',
   'run-mode': 'حالت اجرا',

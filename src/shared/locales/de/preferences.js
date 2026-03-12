@@ -40,7 +40,7 @@ export default {
   'theme-auto': 'Automatisch',
   'theme-light': 'Hell',
   'theme-dark': 'Dunkel',
-  'auto-hide-window': 'Minimiert im Infobereich starten',
+  'auto-hide-window': 'Beim Autostart in den Infobereich minimieren',
   'minimize-to-tray-on-close': 'Beim Schließen in den Infobereich minimieren',
   'hide-dock-on-minimize': 'Dock-Symbol beim Minimieren ausblenden (macOS)',
   'run-mode': 'Ausführungsmodus',

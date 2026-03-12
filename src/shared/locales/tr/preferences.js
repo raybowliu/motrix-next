@@ -40,7 +40,7 @@ export default {
   'theme-auto': 'Otomatik',
   'theme-light': 'Açık',
   'theme-dark': 'Koyu',
-  'auto-hide-window': 'Sistem tepsisine küçültülmüş olarak başlat',
+  'auto-hide-window': 'Otomatik başlatmada sistem tepsisine küçült',
   'minimize-to-tray-on-close': 'Kapatıldığında sistem tepsisine küçült',
   'hide-dock-on-minimize': 'Küçültüldüğünde Dock simgesini gizle (macOS)',
   'run-mode': 'Çalışma modu',

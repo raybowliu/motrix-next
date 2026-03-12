@@ -40,7 +40,7 @@ export default {
   'theme-auto': 'Auto',
   'theme-light': 'Light',
   'theme-dark': 'Dark',
-  'auto-hide-window': 'Start minimized to tray',
+  'auto-hide-window': 'Start minimized to tray on autostart',
   'minimize-to-tray-on-close': 'Minimize to tray on close',
   'hide-dock-on-minimize': 'Hide Dock icon when minimized (macOS)',
   'run-mode': 'Run Mode',

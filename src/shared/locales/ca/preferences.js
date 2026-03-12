@@ -40,7 +40,7 @@ export default {
   'theme-auto': 'Automàtic',
   'theme-light': 'Clar',
   'theme-dark': 'Fosc',
-  'auto-hide-window': 'Iniciar minimitzat a la safata del sistema',
+  'auto-hide-window': 'Minimitza a la safata del sistema en iniciar automàticament',
   'minimize-to-tray-on-close': 'Minimitzar a la safata en tancar',
   'hide-dock-on-minimize': 'Amaga la icona del Dock en minimitzar (macOS)',
   'run-mode': 'Mode d\'execució',

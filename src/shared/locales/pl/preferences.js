@@ -40,7 +40,7 @@ export default {
   'theme-auto': 'Automatyczny',
   'theme-light': 'Jasny',
   'theme-dark': 'Ciemny',
-  'auto-hide-window': 'Uruchom zminimalizowany w zasobniku systemowym',
+  'auto-hide-window': 'Minimalizuj do zasobnika systemowego przy autostarcie',
   'minimize-to-tray-on-close': 'Minimalizuj do zasobnika przy zamykaniu',
   'hide-dock-on-minimize': 'Ukryj ikonę Dock przy minimalizacji (macOS)',
   'run-mode': 'Tryb działania',

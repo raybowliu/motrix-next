@@ -40,7 +40,7 @@ export default {
   'theme-auto': '跟随系统',
   'theme-light': '浅色',
   'theme-dark': '深色',
-  'auto-hide-window': '启动时最小化到托盘',
+  'auto-hide-window': '开机自启时最小化到托盘',
   'minimize-to-tray-on-close': '关闭时最小化到托盘',
   'hide-dock-on-minimize': '最小化到托盘时隐藏 Dock 图标（macOS）',
   'run-mode': '运行模式',

@@ -40,7 +40,7 @@ export default {
   'theme-auto': 'Automatisch',
   'theme-light': 'Licht',
   'theme-dark': 'Donker',
-  'auto-hide-window': 'Geminimaliseerd starten in systeemvak',
+  'auto-hide-window': 'Minimaliseren naar systeemvak bij automatisch opstarten',
   'minimize-to-tray-on-close': 'Minimaliseren naar systeemvak bij sluiten',
   'hide-dock-on-minimize': 'Dock-pictogram verbergen bij minimaliseren (macOS)',
   'run-mode': 'Uitvoeringsmodus',
