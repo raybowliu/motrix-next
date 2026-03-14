@@ -4,7 +4,7 @@ export default {
   'about': 'درباره',
   'release': 'یادداشت‌های انتشار',
   'support': 'پشتیبانی',
-  'description': 'یک مدیر دانلود کامل، از پایه با Tauri، Vue 3 و TypeScript بازسازی شده است.',
+  'description': 'یک مدیر دانلود کامل — از پایه بازسازی شده.',
   'copied': '{label} کپی شد',
   'click-to-copy': 'برای کپی کلیک کنید',
   'version-copied': 'نسخه {label} کپی شد',

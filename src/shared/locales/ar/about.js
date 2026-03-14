@@ -4,7 +4,7 @@ export default {
   'about': 'حول',
   'release': 'ملاحظات الإصدار',
   'support': 'الدعم',
-  'description': 'مدير تنزيلات كامل الميزات، أُعيد بناؤه من الصفر باستخدام Tauri وVue 3 وTypeScript.',
+  'description': 'مدير تنزيل كامل الميزات — أُعيد بناؤه من الألف إلى الياء.',
   'copied': 'تم نسخ {label}',
   'click-to-copy': 'انقر للنسخ',
   'version-copied': 'تم نسخ رقم إصدار {label}',

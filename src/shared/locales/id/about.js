@@ -4,7 +4,7 @@ export default {
   'about': 'Tentang',
   'release': 'Catatan rilis',
   'support': 'Dukungan',
-  'description': 'Manajer unduhan lengkap, dibangun ulang dari awal dengan Tauri, Vue 3, dan TypeScript.',
+  'description': 'Manajer unduhan berfitur lengkap — dibangun ulang dari nol.',
   'copied': '{label} disalin',
   'click-to-copy': 'Klik untuk menyalin',
   'version-copied': 'Versi {label} disalin',

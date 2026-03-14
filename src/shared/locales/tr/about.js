@@ -4,7 +4,7 @@ export default {
   'about': 'Hakkında',
   'release': 'Sürüm notları',
   'support': 'Destek',
-  'description': 'Tauri, Vue 3 ve TypeScript ile sıfırdan yeniden inşa edilmiş tam özellikli bir indirme yöneticisi.',
+  'description': 'Tam özellikli indirme yöneticisi — sıfırdan yeniden inşa edildi.',
   'copied': '{label} kopyalandı',
   'click-to-copy': 'Kopyalamak için tıklayın',
   'version-copied': '{label} sürümü kopyalandı',

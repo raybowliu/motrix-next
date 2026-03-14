@@ -4,7 +4,7 @@ export default {
   'about': 'Quant a',
   'release': 'Notes de la versió',
   'support': 'Suport',
-  'description': 'Un gestor de descàrregues complet, reconstruït des de zero amb Tauri, Vue 3 i TypeScript.',
+  'description': 'Un gestor de descàrregues complet — reconstruït des de zero.',
   'copied': '{label} copiat',
   'click-to-copy': 'Feu clic per copiar',
   'version-copied': 'Versió de {label} copiada',

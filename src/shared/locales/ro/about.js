@@ -4,7 +4,7 @@ export default {
   'about': 'Despre',
   'release': 'Note de lansare',
   'support': 'Asistență',
-  'description': 'Un manager de descărcări complet, reconstruit de la zero cu Tauri, Vue 3 și TypeScript.',
+  'description': 'Un manager de descărcări complet — reconstruit de la zero.',
   'copied': '{label} copiat',
   'click-to-copy': 'Click pentru a copia',
   'version-copied': 'Versiunea {label} copiată',

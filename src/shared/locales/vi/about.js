@@ -4,7 +4,7 @@ export default {
   'about': 'Giới thiệu',
   'release': 'Ghi chú phát hành',
   'support': 'Hỗ trợ',
-  'description': 'Trình quản lý tải xuống đầy đủ tính năng, được xây dựng lại từ đầu với Tauri, Vue 3 và TypeScript.',
+  'description': 'Trình quản lý tải xuống đầy đủ tính năng — xây dựng lại từ đầu.',
   'copied': 'Đã sao chép {label}',
   'click-to-copy': 'Nhấp để sao chép',
   'version-copied': 'Đã sao chép phiên bản {label}',

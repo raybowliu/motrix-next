@@ -4,7 +4,7 @@ export default {
   'about': 'Over',
   'release': 'Releaseopmerkingen',
   'support': 'Ondersteuning',
-  'description': 'Een volledig uitgeruste downloadmanager, helemaal opnieuw opgebouwd met Tauri, Vue 3 en TypeScript.',
+  'description': 'Een volwaardige downloadmanager — helemaal opnieuw opgebouwd.',
   'copied': '{label} gekopieerd',
   'click-to-copy': 'Klik om te kopiëren',
   'version-copied': 'Versie van {label} gekopieerd',

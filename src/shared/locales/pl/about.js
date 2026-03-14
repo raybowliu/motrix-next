@@ -4,7 +4,7 @@ export default {
   'about': 'O programie',
   'release': 'Informacje o wydaniu',
   'support': 'Wsparcie',
-  'description': 'W pełni funkcjonalny menedżer pobierania, odbudowany od podstaw z użyciem Tauri, Vue 3 i TypeScript.',
+  'description': 'Pełnofunkcyjny menedżer pobierania — zbudowany od nowa.',
   'copied': '{label} skopiowano',
   'click-to-copy': 'Kliknij, aby skopiować',
   'version-copied': 'Wersja {label} skopiowana',

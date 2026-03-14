@@ -46,10 +46,30 @@ watch(
 )
 
 const techStack = [
-  { name: 'Tauri v2', color: '#FFC131' },
-  { name: 'Rust', color: '#DE5623' },
-  { name: 'Vue 3', color: '#42b883' },
-  { name: 'Naive UI', color: '#63e2b7' },
+  {
+    name: 'Tauri 2',
+    color: '#FFC131',
+    /* Lucide app-window — desktop application framework */
+    svg: '<rect x="2" y="4" width="20" height="16" rx="2"/><line x1="8" y1="4" x2="8" y2="20"/>',
+  },
+  {
+    name: 'Vue 3',
+    color: '#42b883',
+    /* Lucide layers — layered composition framework */
+    svg: '<path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.84Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/>',
+  },
+  {
+    name: 'Rust',
+    color: '#DE5623',
+    /* Lucide shield — memory safety */
+    svg: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 .67-.95l7-2.5a1 1 0 0 1 .67 0l7 2.5A1 1 0 0 1 20 6z"/>',
+  },
+  {
+    name: 'Naive UI',
+    color: '#63e2b7',
+    /* Lucide leaf — nature/green brand identity */
+    svg: '<path d="M11 20A7 7 0 0 1 9.8 6.9C15.5 4.9 20 .5 20 .5s-4.5 4.5-2.5 10.2A7 7 0 0 1 11 20"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>',
+  },
 ]
 
 const links = [
@@ -168,6 +188,18 @@ function openUrl(url: string) {
       <div class="about-section-label stagger stagger-4">Tech Stack</div>
       <div class="about-tags stagger stagger-4">
         <span v-for="tech in techStack" :key="tech.name" class="about-tag" :style="{ '--tag-color': tech.color }">
+          <svg
+            class="about-tag-icon"
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            v-html="tech.svg"
+          />
           {{ tech.name }}
         </span>
       </div>
@@ -345,6 +377,9 @@ function openUrl(url: string) {
 }
 .about-tag svg {
   flex-shrink: 0;
+}
+.about-tag-icon {
+  opacity: 0.7;
 }
 
 /* ── Link Cards (2×2 Grid) ────────────────────────────────────────── */

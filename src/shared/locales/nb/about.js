@@ -4,7 +4,7 @@ export default {
   'about': 'Om',
   'release': 'Utgivelsesmerknader',
   'support': 'Brukerstøtte',
-  'description': 'En fullt utstyrt nedlastingsbehandler, bygget opp fra bunnen med Tauri, Vue 3 og TypeScript.',
+  'description': 'En fullfunksjons nedlastingsbehandler — gjenoppbygd fra grunnen.',
   'copied': '{label} kopiert',
   'click-to-copy': 'Klikk for å kopiere',
   'version-copied': '{label}-versjon kopiert',

@@ -4,7 +4,7 @@ export default {
   'about': 'について',
   'release': 'リリースノート',
   'support': 'サポート',
-  'description': 'Tauri、Vue 3、TypeScript で一から再構築された、フル機能のダウンロードマネージャー。',
+  'description': 'フル機能のダウンロードマネージャー — ゼロから再構築。',
   'copied': '{label} をコピーしました',
   'click-to-copy': 'クリックしてコピー',
   'version-copied': '{label} のバージョンをコピーしました',

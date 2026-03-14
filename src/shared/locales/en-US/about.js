@@ -4,7 +4,7 @@ export default {
   'about': 'About',
   'release': 'Release Notes',
   'support': 'Support',
-  'description': 'A full-featured download manager, rebuilt from the ground up with Tauri, Vue 3, and TypeScript.',
+  'description': 'A full-featured download manager — rebuilt from the ground up.',
   'copied': '{label} copied',
   'click-to-copy': 'Click to copy',
   'version-copied': '{label} version copied',

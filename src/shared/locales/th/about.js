@@ -4,7 +4,7 @@ export default {
   'about': 'เกี่ยวกับ',
   'release': 'บันทึกการเปลี่ยนแปลง',
   'support': 'ช่วยเหลือ',
-  'description': 'โปรแกรมจัดการดาวน์โหลดครบครัน สร้างใหม่ตั้งแต่ต้นด้วย Tauri, Vue 3 และ TypeScript',
+  'description': 'ตัวจัดการดาวน์โหลดเต็มรูปแบบ — สร้างใหม่ตั้งแต่ต้น',
   'copied': 'คัดลอก {label} แล้ว',
   'click-to-copy': 'คลิกเพื่อคัดลอก',
   'version-copied': 'คัดลอกเวอร์ชัน {label} แล้ว',

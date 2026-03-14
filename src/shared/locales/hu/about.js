@@ -4,7 +4,7 @@ export default {
   'about': 'Névjegy',
   'release': 'Kiadási megjegyzések',
   'support': 'Támogatás',
-  'description': 'Teljes funkcionalitású letöltéskezelő, az alapoktól újraépítve Tauri, Vue 3 és TypeScript használatával.',
+  'description': 'Teljes értékű letöltéskezelő — az alapoktól újraépítve.',
   'copied': '{label} másolva',
   'click-to-copy': 'Kattintson a másoláshoz',
   'version-copied': '{label} verziószám másolva',

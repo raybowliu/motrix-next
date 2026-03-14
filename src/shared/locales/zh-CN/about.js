@@ -4,7 +4,7 @@ export default {
   'about': '关于',
   'release': '更新日志',
   'support': '帮助与支持',
-  'description': '全功能下载管理器，使用 Tauri、Vue 3 和 TypeScript 从零重建。',
+  'description': '全功能下载管理器 — 从零重建。',
   'copied': '已复制 {label}',
   'click-to-copy': '点击复制',
   'version-copied': '已复制 {label} 版本号',
