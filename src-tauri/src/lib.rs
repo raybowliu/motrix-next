@@ -13,22 +13,12 @@ use tauri_plugin_deep_link::DeepLinkExt;
 use tauri_plugin_store::StoreExt;
 use upnp::UpnpState;
 
-#[cfg_attr(mobile, tauri::mobile_entry_point)]
-pub fn run() {
-    // ── Panic hook: route panics through log crate for file persistence ──
-    // Must be set BEFORE Tauri Builder so even plugin init panics are caught.
-    // Without this, panics only reach stderr and are lost on process exit.
-    std::panic::set_hook(Box::new(|info| {
-        log::error!("PANIC: {}", info);
-    }));
-
-    // ── Pre-read log-level from config.json before plugin init ─────────
-    // tauri-plugin-store isn't available until after Builder.build(), so we
-    // read the raw JSON file directly.  Falls back to Info if absent.
-    //
-    // The Pinia preference store persists to config.json under the key
-    // "preferences", with camelCase field names (e.g. "logLevel").
-    let log_level = (|| -> Option<log::LevelFilter> {
+/// Pre-reads the user's log-level preference from the raw config.json file.
+///
+/// `tauri-plugin-store` isn't available until after `Builder.build()`, so we
+/// read the raw JSON file directly.  Falls back to `Info` if absent.
+fn read_log_level() -> log::LevelFilter {
+    (|| -> Option<log::LevelFilter> {
         let data_dir = dirs::data_dir()?.join("com.motrix.next");
         let store_path = data_dir.join("config.json");
         let content = std::fs::read_to_string(store_path).ok()?;
@@ -42,7 +32,247 @@ pub fn run() {
             _ => None,
         }
     })()
-    .unwrap_or(log::LevelFilter::Info);
+    .unwrap_or(log::LevelFilter::Info)
+}
+
+/// Initialises menus, tray, deep links, window state, and platform-specific
+/// workarounds.  Called once by `Builder.setup()`.
+fn setup_app(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
+    let handle = app.handle();
+    #[cfg(target_os = "macos")]
+    {
+        let m = menu::build_menu(handle)?;
+        app.set_menu(m)?;
+    }
+    let tray_state = tray::setup_tray(handle)?;
+    app.manage(tray_state);
+
+    #[cfg(target_os = "macos")]
+    app.on_menu_event(|app, event| match event.id().as_ref() {
+        "new-task" => {
+            let _ = app.emit("menu-event", "new-task");
+        }
+        "open-torrent" => {
+            let _ = app.emit("menu-event", "open-torrent");
+        }
+        "preferences" => {
+            let _ = app.emit("menu-event", "preferences");
+        }
+        "release-notes" => {
+            let _ = app.emit("menu-event", "release-notes");
+        }
+        "report-issue" => {
+            let _ = app.emit("menu-event", "report-issue");
+        }
+        _ => {}
+    });
+
+    let app_handle = app.handle().clone();
+    app.deep_link().on_open_url(move |event| {
+        let urls: Vec<String> = event.urls().iter().map(ToString::to_string).collect();
+        let _ = app_handle.emit("deep-link-open", &urls);
+    });
+
+    // Conditionally restore window state based on user preference.
+    // The window-state plugin is registered with skip_initial_state("main")
+    // so it does NOT auto-restore.  We read the preference here and
+    // call restore_state() manually only when the user has opted in.
+    // The plugin still saves state on exit regardless, so toggling the
+    // preference on later will pick up the last saved geometry.
+    {
+        use tauri_plugin_window_state::{StateFlags, WindowExt};
+
+        let keep_state = app
+            .store("config.json")
+            .ok()
+            .and_then(|s| s.get("preferences"))
+            .and_then(|p| p.get("keepWindowState")?.as_bool())
+            .unwrap_or(false);
+
+        if keep_state {
+            if let Some(w) = app.get_webview_window("main") {
+                // Exclude MAXIMIZED on macOS — same tao bug as above.
+                let flags = {
+                    #[cfg(target_os = "macos")]
+                    {
+                        StateFlags::all() & !StateFlags::MAXIMIZED
+                    }
+                    #[cfg(not(target_os = "macos"))]
+                    {
+                        StateFlags::all()
+                    }
+                };
+                let _ = w.restore_state(flags);
+            }
+        }
+    }
+
+    // Window visibility is deferred to the Vue frontend.
+    // The window starts hidden (tauri.conf.json visible: false) and
+    // only becomes visible when MainLayout.vue mounts and calls
+    // show() + setFocus().  This prevents the transparent-frame
+    // flash on Windows where DWM renders a shadow before WebView2
+    // finishes initializing.  The frontend checks autoHideWindow +
+    // is_autostart_launch to decide whether to show.
+
+    // Disable Windows 11 DWM rounded corners on the main window.
+    // With `transparent: true` + `decorations: false`, Windows 11
+    // applies its own ~8px corner rounding to the HWND, which
+    // conflicts with the CSS `border-radius: 12px` on #container.
+    // The mismatch creates visible desktop-color leaks at the
+    // corners.  Setting DWMWCP_DONOTROUND (value 1) tells DWM to
+    // keep the window rectangular, letting CSS handle all rounding
+    // on the transparent canvas.
+    #[cfg(target_os = "windows")]
+    {
+        use windows_sys::Win32::Graphics::Dwm::{
+            DwmSetWindowAttribute, DWMWA_WINDOW_CORNER_PREFERENCE,
+        };
+        if let Some(w) = app.get_webview_window("main") {
+            if let Ok(hwnd_handle) = w.hwnd() {
+                let hwnd = hwnd_handle.0 as *mut std::ffi::c_void;
+                let preference: u32 = 1; // DWMWCP_DONOTROUND
+                unsafe {
+                    DwmSetWindowAttribute(
+                        hwnd,
+                        DWMWA_WINDOW_CORNER_PREFERENCE as u32,
+                        &preference as *const u32 as *const _,
+                        std::mem::size_of::<u32>() as u32,
+                    );
+                }
+            }
+        }
+    }
+
+    // Hide Dock icon on startup when both autoHideWindow and
+    // hideDockOnMinimize are enabled, AND the app was launched by
+    // the OS autostart mechanism (--autostart flag).  Manual launches
+    // always keep the Dock icon visible.
+    //
+    // NOTE: This only takes effect in production builds (.app bundle).
+    // In `cargo tauri dev` the process is a cargo child, so macOS
+    // Launch Services does not honour activation policy changes.
+    #[cfg(target_os = "macos")]
+    {
+        let is_autostart = std::env::args().any(|a| a == "--autostart");
+        let hide_dock = app
+            .store("config.json")
+            .ok()
+            .and_then(|s| s.get("preferences"))
+            .map(|prefs| {
+                let auto_hide = prefs
+                    .get("autoHideWindow")
+                    .and_then(serde_json::Value::as_bool)
+                    .unwrap_or(false);
+                let dock_hide = prefs
+                    .get("hideDockOnMinimize")
+                    .and_then(serde_json::Value::as_bool)
+                    .unwrap_or(false);
+                auto_hide && dock_hide
+            })
+            .unwrap_or(false);
+        if hide_dock && is_autostart {
+            use tauri::ActivationPolicy;
+            app.set_activation_policy(ActivationPolicy::Accessory);
+        }
+    }
+
+    Ok(())
+}
+
+/// Handles Tauri `RunEvent`s: cleanup on exit, minimize-to-tray on close,
+/// and Dock icon restore on macOS reopen.
+fn handle_run_event(app: &tauri::AppHandle, event: tauri::RunEvent) {
+    match event {
+        tauri::RunEvent::Exit => {
+            let _ = engine::stop_engine(app);
+            // Clean up UPnP port mappings on exit.
+            if let Some(state) = app.try_state::<UpnpState>() {
+                tauri::async_runtime::block_on(upnp::stop_mapping(state.inner()));
+            }
+        }
+        // Rust-level defense for minimize-to-tray on close.
+        // On Linux/Wayland with decorations:false, the frontend
+        // onCloseRequested listener may not fire for all close
+        // paths (e.g. Alt+F4, GNOME overview ×, taskbar close).
+        // This handler ensures the main window is hidden rather
+        // than destroyed when the setting is enabled.
+        // Non-main windows are never intercepted.
+        tauri::RunEvent::WindowEvent {
+            event: tauri::WindowEvent::CloseRequested { api, .. },
+            label,
+            ..
+        } => {
+            if label != "main" {
+                return;
+            }
+
+            // ALWAYS prevent the native close — the frontend owns the
+            // exit flow (exit confirmation dialog / minimize-to-tray).
+            // Without this, the window starts closing before the JS
+            // onCloseRequested handler can show the dialog, freezing
+            // the webview on macOS.
+            api.prevent_close();
+
+            // Fast path: if minimize-to-tray is enabled, hide the
+            // window immediately from Rust without waiting for JS.
+            // This covers native close paths that may bypass the
+            // frontend listener (e.g. Alt+F4 on Linux/Wayland).
+            let store_prefs = app
+                .store("config.json")
+                .ok()
+                .and_then(|s| s.get("preferences"));
+
+            let should_hide = store_prefs
+                .as_ref()
+                .and_then(|p| p.get("minimizeToTrayOnClose")?.as_bool())
+                .unwrap_or(false);
+
+            if should_hide {
+                if let Some(window) = app.get_webview_window("main") {
+                    let _ = window.hide();
+                }
+
+                #[cfg(target_os = "macos")]
+                {
+                    let hide_dock = store_prefs
+                        .as_ref()
+                        .and_then(|p| p.get("hideDockOnMinimize")?.as_bool())
+                        .unwrap_or(false);
+                    if hide_dock {
+                        use tauri::ActivationPolicy;
+                        let _ = app.set_activation_policy(ActivationPolicy::Accessory);
+                    }
+                }
+            }
+            // When should_hide is false, the frontend's onCloseRequested
+            // listener shows the exit dialog.  The user can then choose
+            // to quit (which calls exit(0) → RunEvent::Exit).
+        }
+        #[cfg(target_os = "macos")]
+        tauri::RunEvent::Reopen { .. } => {
+            // Restore Dock icon before showing the window.
+            use tauri::ActivationPolicy;
+            let _ = app.set_activation_policy(ActivationPolicy::Regular);
+            if let Some(window) = app.get_webview_window("main") {
+                let _ = window.show();
+                let _ = window.set_focus();
+            }
+        }
+        _ => {}
+    }
+}
+
+#[cfg_attr(mobile, tauri::mobile_entry_point)]
+pub fn run() {
+    // ── Panic hook: route panics through log crate for file persistence ──
+    // Must be set BEFORE Tauri Builder so even plugin init panics are caught.
+    // Without this, panics only reach stderr and are lost on process exit.
+    std::panic::set_hook(Box::new(|info| {
+        log::error!("PANIC: {}", info);
+    }));
+
+    let log_level = read_log_level();
 
     let mut builder = tauri::Builder::default()
         .plugin(
@@ -163,226 +393,8 @@ pub fn run() {
             commands::is_autostart_launch,
             commands::export_diagnostic_logs,
         ])
-        .setup(|app| {
-            let handle = app.handle();
-            #[cfg(target_os = "macos")]
-            {
-                let m = menu::build_menu(handle)?;
-                app.set_menu(m)?;
-            }
-            let tray_state = tray::setup_tray(handle)?;
-            app.manage(tray_state);
-
-            #[cfg(target_os = "macos")]
-            app.on_menu_event(|app, event| match event.id().as_ref() {
-                "new-task" => {
-                    let _ = app.emit("menu-event", "new-task");
-                }
-                "open-torrent" => {
-                    let _ = app.emit("menu-event", "open-torrent");
-                }
-                "preferences" => {
-                    let _ = app.emit("menu-event", "preferences");
-                }
-                "release-notes" => {
-                    let _ = app.emit("menu-event", "release-notes");
-                }
-                "report-issue" => {
-                    let _ = app.emit("menu-event", "report-issue");
-                }
-                _ => {}
-            });
-
-            let app_handle = app.handle().clone();
-            app.deep_link().on_open_url(move |event| {
-                let urls: Vec<String> = event.urls().iter().map(ToString::to_string).collect();
-                let _ = app_handle.emit("deep-link-open", &urls);
-            });
-
-            // Conditionally restore window state based on user preference.
-            // The window-state plugin is registered with skip_initial_state("main")
-            // so it does NOT auto-restore.  We read the preference here and
-            // call restore_state() manually only when the user has opted in.
-            // The plugin still saves state on exit regardless, so toggling the
-            // preference on later will pick up the last saved geometry.
-            {
-                use tauri_plugin_window_state::{StateFlags, WindowExt};
-
-                let keep_state = app
-                    .store("config.json")
-                    .ok()
-                    .and_then(|s| s.get("preferences"))
-                    .and_then(|p| p.get("keepWindowState")?.as_bool())
-                    .unwrap_or(false);
-
-                if keep_state {
-                    if let Some(w) = app.get_webview_window("main") {
-                        // Exclude MAXIMIZED on macOS — same tao bug as above.
-                        let flags = {
-                            #[cfg(target_os = "macos")]
-                            {
-                                StateFlags::all() & !StateFlags::MAXIMIZED
-                            }
-                            #[cfg(not(target_os = "macos"))]
-                            {
-                                StateFlags::all()
-                            }
-                        };
-                        let _ = w.restore_state(flags);
-                    }
-                }
-            }
-
-            // Window visibility is deferred to the Vue frontend.
-            // The window starts hidden (tauri.conf.json visible: false) and
-            // only becomes visible when MainLayout.vue mounts and calls
-            // show() + setFocus().  This prevents the transparent-frame
-            // flash on Windows where DWM renders a shadow before WebView2
-            // finishes initializing.  The frontend checks autoHideWindow +
-            // is_autostart_launch to decide whether to show.
-
-            // Disable Windows 11 DWM rounded corners on the main window.
-            // With `transparent: true` + `decorations: false`, Windows 11
-            // applies its own ~8px corner rounding to the HWND, which
-            // conflicts with the CSS `border-radius: 12px` on #container.
-            // The mismatch creates visible desktop-color leaks at the
-            // corners.  Setting DWMWCP_DONOTROUND (value 1) tells DWM to
-            // keep the window rectangular, letting CSS handle all rounding
-            // on the transparent canvas.
-            #[cfg(target_os = "windows")]
-            {
-                use windows_sys::Win32::Graphics::Dwm::{
-                    DwmSetWindowAttribute, DWMWA_WINDOW_CORNER_PREFERENCE,
-                };
-                if let Some(w) = app.get_webview_window("main") {
-                    if let Ok(hwnd_handle) = w.hwnd() {
-                        let hwnd = hwnd_handle.0 as *mut std::ffi::c_void;
-                        let preference: u32 = 1; // DWMWCP_DONOTROUND
-                        unsafe {
-                            DwmSetWindowAttribute(
-                                hwnd,
-                                DWMWA_WINDOW_CORNER_PREFERENCE as u32,
-                                &preference as *const u32 as *const _,
-                                std::mem::size_of::<u32>() as u32,
-                            );
-                        }
-                    }
-                }
-            }
-
-            // Hide Dock icon on startup when both autoHideWindow and
-            // hideDockOnMinimize are enabled, AND the app was launched by
-            // the OS autostart mechanism (--autostart flag).  Manual launches
-            // always keep the Dock icon visible.
-            //
-            // NOTE: This only takes effect in production builds (.app bundle).
-            // In `cargo tauri dev` the process is a cargo child, so macOS
-            // Launch Services does not honour activation policy changes.
-            #[cfg(target_os = "macos")]
-            {
-                let is_autostart = std::env::args().any(|a| a == "--autostart");
-                let hide_dock = app
-                    .store("config.json")
-                    .ok()
-                    .and_then(|s| s.get("preferences"))
-                    .map(|prefs| {
-                        let auto_hide = prefs
-                            .get("autoHideWindow")
-                            .and_then(serde_json::Value::as_bool)
-                            .unwrap_or(false);
-                        let dock_hide = prefs
-                            .get("hideDockOnMinimize")
-                            .and_then(serde_json::Value::as_bool)
-                            .unwrap_or(false);
-                        auto_hide && dock_hide
-                    })
-                    .unwrap_or(false);
-                if hide_dock && is_autostart {
-                    use tauri::ActivationPolicy;
-                    app.set_activation_policy(ActivationPolicy::Accessory);
-                }
-            }
-
-            Ok(())
-        })
+        .setup(|app| setup_app(app))
         .build(tauri::generate_context!())
         .expect("error while building tauri application")
-        .run(|app, event| match event {
-            tauri::RunEvent::Exit => {
-                let _ = engine::stop_engine(app);
-                // Clean up UPnP port mappings on exit.
-                if let Some(state) = app.try_state::<UpnpState>() {
-                    tauri::async_runtime::block_on(upnp::stop_mapping(state.inner()));
-                }
-            }
-            // Rust-level defense for minimize-to-tray on close.
-            // On Linux/Wayland with decorations:false, the frontend
-            // onCloseRequested listener may not fire for all close
-            // paths (e.g. Alt+F4, GNOME overview ×, taskbar close).
-            // This handler ensures the main window is hidden rather
-            // than destroyed when the setting is enabled.
-            // Non-main windows are never intercepted.
-            tauri::RunEvent::WindowEvent {
-                event: tauri::WindowEvent::CloseRequested { api, .. },
-                label,
-                ..
-            } => {
-                if label != "main" {
-                    return;
-                }
-
-                // ALWAYS prevent the native close — the frontend owns the
-                // exit flow (exit confirmation dialog / minimize-to-tray).
-                // Without this, the window starts closing before the JS
-                // onCloseRequested handler can show the dialog, freezing
-                // the webview on macOS.
-                api.prevent_close();
-
-                // Fast path: if minimize-to-tray is enabled, hide the
-                // window immediately from Rust without waiting for JS.
-                // This covers native close paths that may bypass the
-                // frontend listener (e.g. Alt+F4 on Linux/Wayland).
-                let store_prefs = app
-                    .store("config.json")
-                    .ok()
-                    .and_then(|s| s.get("preferences"));
-
-                let should_hide = store_prefs
-                    .as_ref()
-                    .and_then(|p| p.get("minimizeToTrayOnClose")?.as_bool())
-                    .unwrap_or(false);
-
-                if should_hide {
-                    if let Some(window) = app.get_webview_window("main") {
-                        let _ = window.hide();
-                    }
-
-                    #[cfg(target_os = "macos")]
-                    {
-                        let hide_dock = store_prefs
-                            .as_ref()
-                            .and_then(|p| p.get("hideDockOnMinimize")?.as_bool())
-                            .unwrap_or(false);
-                        if hide_dock {
-                            use tauri::ActivationPolicy;
-                            let _ = app.set_activation_policy(ActivationPolicy::Accessory);
-                        }
-                    }
-                }
-                // When should_hide is false, the frontend's onCloseRequested
-                // listener shows the exit dialog.  The user can then choose
-                // to quit (which calls exit(0) → RunEvent::Exit).
-            }
-            #[cfg(target_os = "macos")]
-            tauri::RunEvent::Reopen { .. } => {
-                // Restore Dock icon before showing the window.
-                use tauri::ActivationPolicy;
-                let _ = app.set_activation_policy(ActivationPolicy::Regular);
-                if let Some(window) = app.get_webview_window("main") {
-                    let _ = window.show();
-                    let _ = window.set_focus();
-                }
-            }
-            _ => {}
-        });
+        .run(handle_run_event);
 }
