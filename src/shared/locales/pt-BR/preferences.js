@@ -135,7 +135,7 @@ export default {
   'engine-restarted': 'Motor aria2 reiniciado',
   'engine-restart-failed': 'Falha ao reiniciar o motor aria2',
   'engine-restart-title': 'Reiniciar motor aria2',
-  'engine-restart-confirm': 'Algumas alterações requerem a reinicialização do mecanismo de download para entrarem em vigor. Os downloads ativos serão brevemente interrompidos, mas serão retomados automaticamente após a reinicialização.',
+  'engine-restart-confirm': 'Esta alteração requer a reinicialização do mecanismo de download para entrar em vigor. Os downloads ativos serão brevemente interrompidos, mas serão retomados automaticamente após a reinicialização.',
   'engine-restart-now': 'Reiniciar agora',
   'engine-restart-later': 'Mais tarde',
   'engine-restarting': 'Reiniciando motor aria2...',

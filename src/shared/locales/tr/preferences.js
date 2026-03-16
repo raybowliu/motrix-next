@@ -135,7 +135,7 @@ export default {
   'engine-restarted': 'aria2 motoru yeniden baslatildi',
   'engine-restart-failed': 'aria2 motoru yeniden baslatma basarisiz',
   'engine-restart-title': 'aria2 motorunu yeniden baslat',
-  'engine-restart-confirm': 'Bazı değişikliklerin geçerli olması için indirme motorunun yeniden başlatılması gerekir. Etkin indirmeler kısa süreliğine kesintiye uğrayacak ancak yeniden başlatma sonrasında otomatik olarak devam edecektir.',
+  'engine-restart-confirm': 'Bu değişikliğin geçerli olması için indirme motorunun yeniden başlatılması gerekir. Etkin indirmeler kısa süreliğine kesintiye uğrayacak ancak yeniden başlatma sonrasında otomatik olarak devam edecektir.',
   'engine-restart-now': 'Şimdi yeniden başlat',
   'engine-restart-later': 'Daha sonra',
   'engine-restarting': 'aria2 motoru yeniden baslatiliyor...',

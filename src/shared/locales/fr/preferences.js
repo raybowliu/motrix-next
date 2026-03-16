@@ -135,7 +135,7 @@ export default {
   'engine-restarted': 'Moteur aria2 redemarre',
   'engine-restart-failed': 'Echec du redemarrage du moteur aria2',
   'engine-restart-title': 'Redemarrer le moteur aria2',
-  'engine-restart-confirm': 'Certains changements nécessitent un redémarrage du moteur de téléchargement pour prendre effet. Les téléchargements actifs seront brièvement interrompus mais reprendront automatiquement après le redémarrage.',
+  'engine-restart-confirm': 'Cette modification nécessite un redémarrage du moteur de téléchargement pour prendre effet. Les téléchargements actifs seront brièvement interrompus mais reprendront automatiquement après le redémarrage.',
   'engine-restart-now': 'Redémarrer maintenant',
   'engine-restart-later': 'Plus tard',
   'engine-restarting': 'Redemarrage du moteur aria2...',

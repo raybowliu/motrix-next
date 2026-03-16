@@ -135,7 +135,7 @@ export default {
   'engine-restarted': 'Motore aria2 riavviato',
   'engine-restart-failed': 'Riavvio del motore aria2 non riuscito',
   'engine-restart-title': 'Riavvia motore aria2',
-  'engine-restart-confirm': 'Alcune modifiche richiedono il riavvio del motore di download per avere effetto. I download attivi verranno brevemente interrotti ma riprenderanno automaticamente dopo il riavvio.',
+  'engine-restart-confirm': 'Questa modifica richiede il riavvio del motore di download per avere effetto. I download attivi verranno brevemente interrotti ma riprenderanno automaticamente dopo il riavvio.',
   'engine-restart-now': 'Riavvia ora',
   'engine-restart-later': 'Più tardi',
   'engine-restarting': 'Riavvio del motore aria2...',
