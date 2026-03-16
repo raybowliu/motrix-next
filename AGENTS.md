@@ -10,13 +10,13 @@
 
 ## A. Project Architecture
 
-| Layer | Stack |
-|-------|-------|
-| **Frontend** | Vue 3 Composition API + Pinia + Naive UI + TypeScript |
-| **Backend** | Rust (Tauri 2) + aria2 sidecar |
-| **Build** | Vite (frontend) + Cargo (backend) |
+| Layer               | Stack                                                              |
+| ------------------- | ------------------------------------------------------------------ |
+| **Frontend**        | Vue 3 Composition API + Pinia + Naive UI + TypeScript              |
+| **Backend**         | Rust (Tauri 2) + aria2 sidecar                                     |
+| **Build**           | Vite (frontend) + Cargo (backend)                                  |
 | **Package Manager** | pnpm (version pinned via `packageManager` field in `package.json`) |
-| **Testing** | Vitest (frontend), cargo test (backend) |
+| **Testing**         | Vitest (frontend), cargo test (backend)                            |
 
 ### Key File Paths
 
@@ -24,6 +24,8 @@
 src/
 ├── api/                        # Aria2 JSON-RPC client
 ├── components/preference/      # Settings UI (Basic.vue, Advanced.vue, UpdateDialog.vue)
+├── composables/                # Vue composables — business logic extracted from components
+├── layouts/                    # Page-level layouts (MainLayout.vue)
 ├── shared/
 │   ├── types.ts                # All TypeScript interfaces (AppConfig, TauriUpdate, etc.)
 │   ├── constants.ts            # Timing constants, update channels
@@ -41,7 +43,12 @@ src-tauri/
 │   │   ├── app.rs              # Config, tray, menu, engine commands
 │   │   ├── updater.rs          # check_for_update, install_update commands
 │   │   └── upnp.rs             # UPnP port mapping commands
-│   ├── engine.rs               # aria2 sidecar lifecycle
+│   ├── engine/
+│   │   ├── mod.rs              # Module re-exports
+│   │   ├── lifecycle.rs        # aria2 sidecar start/stop/restart
+│   │   ├── args.rs             # aria2 command-line argument builder
+│   │   ├── cleanup.rs          # Engine cleanup utilities
+│   │   └── state.rs            # Engine state management
 │   ├── error.rs                # AppError enum (Store, Engine, Io, NotFound, Updater, Upnp)
 │   ├── menu.rs                 # Native menu builder (macOS only, cfg-gated)
 │   ├── tray.rs                 # System tray setup
@@ -152,11 +159,11 @@ The release workflow (`.github/workflows/release.yml`) is triggered by `on: rele
 
 ### Tag Naming
 
-| Channel | Tag Pattern | JSON Generated | Example |
-|---------|------------|----------------|---------|
-| Stable | `v1.4.0` | `latest.json` | `v1.3.1` |
-| Beta | `v1.4.0-beta.N` | `beta.json` | `v1.4.0-beta.1` |
-| RC | `v1.4.0-rc.N` | `beta.json` | `v1.4.0-rc.1` |
+| Channel | Tag Pattern     | JSON Generated | Example         |
+| ------- | --------------- | -------------- | --------------- |
+| Stable  | `v1.4.0`        | `latest.json`  | `v1.3.1`        |
+| Beta    | `v1.4.0-beta.N` | `beta.json`    | `v1.4.0-beta.1` |
+| RC      | `v1.4.0-rc.N`   | `beta.json`    | `v1.4.0-rc.1`   |
 
 ### Updater JSON Hosting
 
@@ -203,15 +210,16 @@ The user's channel preference is stored as `updateChannel` in the preference sto
 
    Go to **Releases → Create new release** on GitHub and **select the existing tag**:
 
-   | Setting | Stable | Beta / RC |
-   |---------|--------|-----------|
-   | Tag | `v1.4.0` (select existing) | `v1.4.0-beta.1` |
-   | Target | `main` | `main` |
-   | Title | `v1.4.0` | `v1.4.0-beta.1` |
-   | "Set as latest release" | ✅ Yes | ❌ No |
-   | "Set as a pre-release" | ❌ No | ✅ Yes |
+   | Setting                 | Stable                     | Beta / RC       |
+   | ----------------------- | -------------------------- | --------------- |
+   | Tag                     | `v1.4.0` (select existing) | `v1.4.0-beta.1` |
+   | Target                  | `main`                     | `main`          |
+   | Title                   | `v1.4.0`                   | `v1.4.0-beta.1` |
+   | "Set as latest release" | ✅ Yes                     | ❌ No           |
+   | "Set as a pre-release"  | ❌ No                      | ✅ Yes          |
 
    > **Both the tag name AND the pre-release checkbox matter.** They control different systems:
+   >
    > - **Tag name** (`-beta` / `-rc`) → tells CI which updater JSON to write (`latest.json` vs `beta.json`)
    > - **"Set as a pre-release"** → tells GitHub to exclude it from the "Latest" badge and the `/releases/latest` API (used by the website download page)
    >
@@ -279,11 +287,11 @@ One-paragraph summary of the release scope and significance.
 
 ### 📦 Downloads
 
-| Platform | Architecture | File |
-|----------|-------------|------|
-| macOS | Apple Silicon · Intel | `.dmg` |
-| Windows | x64 · ARM64 | `-setup.exe` |
-| Linux | x64 · ARM64 | `.AppImage` `.deb` |
+| Platform | Architecture          | File               |
+| -------- | --------------------- | ------------------ |
+| macOS    | Apple Silicon · Intel | `.dmg`             |
+| Windows  | x64 · ARM64           | `-setup.exe`       |
+| Linux    | x64 · ARM64           | `.AppImage` `.deb` |
 ```
 
 **Guidelines:**
@@ -301,14 +309,14 @@ One-paragraph summary of the release scope and significance.
 
 Two parallel jobs:
 
-| Job | Steps |
-|-----|-------|
-| `frontend` | `pnpm install` → `eslint` → `prettier --check` → `vue-tsc --noEmit` → `vitest run` |
-| `backend` | `cargo check --all-targets` → `cargo test` |
+| Job        | Steps                                                                                             |
+| ---------- | ------------------------------------------------------------------------------------------------- |
+| `frontend` | `pnpm install` → `eslint` → `prettier --check` → `vue-tsc --noEmit` → `vitest run` → `vite build` |
+| `backend`  | `cargo fmt --check` → `cargo clippy` → `cargo check --all-targets` → `cargo test`                 |
 
 ### `release.yml` (Release Published)
 
-1. **Build job** — Matrix: `macos-latest` (aarch64), `macos-15-intel` (x86_64), `windows-latest` (×2: x64 + aarch64 cross-compile), `ubuntu-latest`, `ubuntu-24.04-arm`
+1. **Build job** — Matrix: `macos-latest` (aarch64), `macos-15-intel` (x86_64), `windows-latest` (×2: x64 + aarch64 cross-compile), `ubuntu-22.04` (GLIBC 2.35 compat), `ubuntu-24.04-arm`
 2. **merge-updater-json job** — Detects channel from tag name → generates `latest.json` or `beta.json` with 6 platform keys → uploads to `updater` tag
 
 ---
@@ -377,4 +385,3 @@ This project uses the **Superpowers** skill framework (`~/.claude/skills/using-s
 ## J. Testing Constraints
 
 > **DO NOT use browser tools (Playwright, browser subagent, etc.) to test this app.** Tauri renders in a native webview — `localhost:1420` in a browser lacks IPC, tray, and sidecar access. Use CLI checks (`vue-tsc`, `pnpm test`, `cargo test`) or ask the user to verify UI via `pnpm tauri dev`.
-
