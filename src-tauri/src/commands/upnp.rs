@@ -11,7 +11,7 @@ pub async fn start_upnp_mapping(
 ) -> Result<serde_json::Value, AppError> {
     crate::upnp::start_mapping(state.inner(), bt_port, dht_port)
         .await
-        .map_err(|e| AppError::Upnp(e))
+        .map_err(AppError::Upnp)
 }
 
 #[tauri::command]

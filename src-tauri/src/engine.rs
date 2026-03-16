@@ -188,7 +188,7 @@ pub fn start_engine(app: &tauri::AppHandle, config: &serde_json::Value) -> Resul
                     // monitor started, this is a stale handler — ignore silently.
                     let is_stale = app_handle
                         .try_state::<EngineState>()
-                        .map_or(true, |s| !s.is_current_generation(my_gen));
+                        .is_none_or(|s| !s.is_current_generation(my_gen));
                     if is_stale {
                         log::debug!("stale monitor (gen {}) ignoring termination", my_gen);
                         break;
@@ -197,7 +197,8 @@ pub fn start_engine(app: &tauri::AppHandle, config: &serde_json::Value) -> Resul
                     // Only notify frontend of UNEXPECTED termination.
                     // Intentional stops (restart, update, relaunch) set the flag
                     // before kill() — swap(false) atomically reads and resets.
-                    let was_intentional = if let Some(state) = app_handle.try_state::<EngineState>() {
+                    let was_intentional = if let Some(state) = app_handle.try_state::<EngineState>()
+                    {
                         state.intentional_stop.swap(false, Ordering::SeqCst)
                     } else {
                         false
@@ -368,14 +369,15 @@ pub fn restart_engine(app: &tauri::AppHandle, config: &serde_json::Value) -> Res
                     // Generation guard: stale monitor → ignore silently.
                     let is_stale = app_handle
                         .try_state::<EngineState>()
-                        .map_or(true, |s| !s.is_current_generation(my_gen));
+                        .is_none_or(|s| !s.is_current_generation(my_gen));
                     if is_stale {
                         log::debug!("stale monitor (gen {}) ignoring termination", my_gen);
                         break;
                     }
 
                     // Only notify frontend of UNEXPECTED termination.
-                    let was_intentional = if let Some(state) = app_handle.try_state::<EngineState>() {
+                    let was_intentional = if let Some(state) = app_handle.try_state::<EngineState>()
+                    {
                         state.intentional_stop.swap(false, Ordering::SeqCst)
                     } else {
                         false
@@ -610,6 +612,17 @@ fn build_start_args(
     args
 }
 
+/// Determines whether a process command name is an aria2c process.
+///
+/// Used by `cleanup_port` to verify that only aria2c processes are killed
+/// when reclaiming the RPC port — never arbitrary processes that happen to
+/// occupy the same port.
+///
+/// Matches both `aria2c` and `motrixnext-aria2c` (the namespaced sidecar name).
+fn is_aria2c_process(comm: &str) -> bool {
+    comm.contains("aria2c")
+}
+
 /// Kill only aria2c processes occupying the given port, so a new aria2c can bind to it.
 /// Non-aria2c processes on the same port are left untouched to prevent accidental kills.
 fn cleanup_port(port: &str) {
@@ -636,10 +649,11 @@ fn cleanup_port(port: &str) {
                     if let Ok(check_out) = check {
                         let comm = String::from_utf8_lossy(&check_out.stdout);
                         let comm = comm.trim();
-                        if comm.contains("aria2c") {
+                        if is_aria2c_process(comm) {
                             log::debug!(
                                 "killing leftover aria2c process on port {}: PID {}",
-                                port, pid
+                                port,
+                                pid
                             );
                             let _ = std::process::Command::new("sh")
                                 .args(["-c", &format!("kill -9 {} 2>/dev/null", pid)])
@@ -648,7 +662,9 @@ fn cleanup_port(port: &str) {
                         } else {
                             log::debug!(
                                 "port {} occupied by non-aria2c process '{}' (PID {}), skipping",
-                                port, comm, pid
+                                port,
+                                comm,
+                                pid
                             );
                         }
                     }
@@ -698,7 +714,8 @@ fn cleanup_port(port: &str) {
                         if is_aria2c {
                             log::debug!(
                                 "killing leftover aria2c process on port {}: PID {}",
-                                port, pid
+                                port,
+                                pid
                             );
                             let _ = std::process::Command::new("taskkill")
                                 .args(["/F", "/PID", pid])
@@ -708,7 +725,8 @@ fn cleanup_port(port: &str) {
                         } else {
                             log::debug!(
                                 "port {} occupied by non-aria2c process (PID {}), skipping",
-                                port, pid
+                                port,
+                                pid
                             );
                         }
                     }
@@ -876,7 +894,8 @@ mod tests {
 
     #[test]
     fn strip_ansi_handles_notice_tag() {
-        let input = "03/15 00:56:16 [\x1b[1;32mNOTICE\x1b[0m] IPv4 RPC: listening on TCP port 16800";
+        let input =
+            "03/15 00:56:16 [\x1b[1;32mNOTICE\x1b[0m] IPv4 RPC: listening on TCP port 16800";
         let clean = strip_ansi(input);
         assert!(clean.contains("[NOTICE]"));
         assert!(!clean.contains("\x1b"));
@@ -980,5 +999,30 @@ mod tests {
         assert!(!args.iter().any(|a| a.contains("--dir=")));
         // Arrays are not handled by the match — skipped via `_ => continue`
         assert!(!args.iter().any(|a| a.contains("--header=")));
+    }
+
+    // ── is_aria2c_process ───────────────────────────────────────────
+
+    #[test]
+    fn is_aria2c_process_matches_aria2c() {
+        assert!(is_aria2c_process("aria2c"));
+    }
+
+    #[test]
+    fn is_aria2c_process_matches_namespaced_sidecar() {
+        assert!(is_aria2c_process("motrixnext-aria2c"));
+    }
+
+    #[test]
+    fn is_aria2c_process_matches_full_path() {
+        assert!(is_aria2c_process("/usr/local/bin/aria2c"));
+    }
+
+    #[test]
+    fn is_aria2c_process_rejects_other_processes() {
+        assert!(!is_aria2c_process("nginx"));
+        assert!(!is_aria2c_process("node"));
+        assert!(!is_aria2c_process("python3"));
+        assert!(!is_aria2c_process(""));
     }
 }

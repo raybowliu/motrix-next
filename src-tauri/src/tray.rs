@@ -20,8 +20,7 @@ pub fn setup_tray(app: &AppHandle) -> Result<TrayMenuState, Box<dyn std::error::
     let new_task_item = MenuItem::with_id(app, "tray-new-task", "New Task", true, None::<&str>)?;
     let resume_all_item =
         MenuItem::with_id(app, "tray-resume-all", "Resume All", true, None::<&str>)?;
-    let pause_all_item =
-        MenuItem::with_id(app, "tray-pause-all", "Pause All", true, None::<&str>)?;
+    let pause_all_item = MenuItem::with_id(app, "tray-pause-all", "Pause All", true, None::<&str>)?;
     let quit_item = MenuItem::with_id(app, "tray-quit", "Quit", true, None::<&str>)?;
 
     // Clone items before moving into the HashMap — the menu needs the originals,
@@ -76,7 +75,8 @@ pub fn setup_tray(app: &AppHandle) -> Result<TrayMenuState, Box<dyn std::error::
             }
         })
         .on_menu_event(|app, event| {
-            match event.id.as_ref() {
+            let id = event.id.as_ref();
+            match id {
                 "show" => {
                     #[cfg(target_os = "macos")]
                     {
@@ -88,23 +88,11 @@ pub fn setup_tray(app: &AppHandle) -> Result<TrayMenuState, Box<dyn std::error::
                         let _ = window.set_focus();
                     }
                 }
-                "tray-new-task" | "tray-resume-all" | "tray-pause-all" => {
-                    // Emit to frontend — MainLayout.vue handles these via
-                    // the existing tray-menu-action listener.
-                    let action = event
-                        .id
-                        .as_ref()
-                        .strip_prefix("tray-")
-                        .unwrap_or(event.id.as_ref());
-                    let _ = app.emit("tray-menu-action", action);
+                _ => {
+                    if let Some(action) = resolve_tray_action(id) {
+                        let _ = app.emit("tray-menu-action", action);
+                    }
                 }
-                "tray-quit" => {
-                    // Emit to Vue for consistent exit sequence (animation + cleanup).
-                    // handleExitConfirm() in MainLayout.vue calls exit(0) after
-                    // the closing animation completes.
-                    let _ = app.emit("tray-menu-action", "quit");
-                }
-                _ => {}
             }
         })
         .build(app)?;
@@ -112,4 +100,58 @@ pub fn setup_tray(app: &AppHandle) -> Result<TrayMenuState, Box<dyn std::error::
     Ok(TrayMenuState {
         items: Mutex::new(items_map),
     })
+}
+
+/// Maps a tray menu event ID to the action string emitted to the frontend.
+///
+/// Returns `None` for the "show" action (handled natively, not forwarded)
+/// and for unknown IDs.
+///
+/// This is a pure function extracted from the `on_menu_event` closure
+/// so it can be unit-tested without a Tauri runtime.
+pub fn resolve_tray_action(menu_id: &str) -> Option<&str> {
+    match menu_id {
+        "tray-new-task" | "tray-resume-all" | "tray-pause-all" => {
+            Some(menu_id.strip_prefix("tray-").unwrap_or(menu_id))
+        }
+        "tray-quit" => Some("quit"),
+        // "show" is handled natively (window.show + set_focus), not emitted
+        _ => None,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn resolve_new_task() {
+        assert_eq!(resolve_tray_action("tray-new-task"), Some("new-task"));
+    }
+
+    #[test]
+    fn resolve_resume_all() {
+        assert_eq!(resolve_tray_action("tray-resume-all"), Some("resume-all"));
+    }
+
+    #[test]
+    fn resolve_pause_all() {
+        assert_eq!(resolve_tray_action("tray-pause-all"), Some("pause-all"));
+    }
+
+    #[test]
+    fn resolve_quit() {
+        assert_eq!(resolve_tray_action("tray-quit"), Some("quit"));
+    }
+
+    #[test]
+    fn resolve_show_returns_none() {
+        // "show" is handled natively, not emitted to frontend
+        assert_eq!(resolve_tray_action("show"), None);
+    }
+
+    #[test]
+    fn resolve_unknown_returns_none() {
+        assert_eq!(resolve_tray_action("nonexistent"), None);
+    }
 }

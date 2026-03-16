@@ -299,7 +299,7 @@ pub fn run() {
                     .unwrap_or(false);
                 if hide_dock && is_autostart {
                     use tauri::ActivationPolicy;
-                    let _ = app.set_activation_policy(ActivationPolicy::Accessory);
+                    app.set_activation_policy(ActivationPolicy::Accessory);
                 }
             }
 

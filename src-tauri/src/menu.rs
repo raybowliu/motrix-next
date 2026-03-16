@@ -11,7 +11,13 @@ pub fn build_menu(app: &AppHandle) -> Result<Menu<tauri::Wry>, tauri::Error> {
         &[
             &PredefinedMenuItem::about(app, Some("About Motrix Next"), Default::default())?,
             &PredefinedMenuItem::separator(app)?,
-            &MenuItem::with_id(app, "preferences", "Preferences...", true, Some("CmdOrCtrl+,"))?,
+            &MenuItem::with_id(
+                app,
+                "preferences",
+                "Preferences...",
+                true,
+                Some("CmdOrCtrl+,"),
+            )?,
             &PredefinedMenuItem::separator(app)?,
             &PredefinedMenuItem::hide(app, None)?,
             &PredefinedMenuItem::hide_others(app, None)?,
@@ -28,7 +34,13 @@ pub fn build_menu(app: &AppHandle) -> Result<Menu<tauri::Wry>, tauri::Error> {
         &[
             &MenuItem::with_id(app, "new-task", "New Task", true, Some("CmdOrCtrl+N"))?,
             &PredefinedMenuItem::separator(app)?,
-            &MenuItem::with_id(app, "open-torrent", "Open Torrent File...", true, Some("CmdOrCtrl+O"))?,
+            &MenuItem::with_id(
+                app,
+                "open-torrent",
+                "Open Torrent File...",
+                true,
+                Some("CmdOrCtrl+O"),
+            )?,
         ],
     )?;
 

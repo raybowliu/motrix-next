@@ -263,3 +263,57 @@ async fn renewal_loop(ports: Vec<MappedPort>) {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn new_state_has_no_mapped_ports() {
+        let state = UpnpState::new();
+        let inner = state.inner.lock().expect("lock not poisoned");
+        assert!(inner.mapped_ports.is_empty());
+        assert!(inner.renewal_handle.is_none());
+    }
+
+    #[test]
+    fn get_status_empty_state_reports_inactive() {
+        let state = UpnpState::new();
+        let status = get_status(&state);
+        assert_eq!(status["active"], false);
+        assert_eq!(status["ports"].as_array().expect("ports is array").len(), 0);
+    }
+
+    #[test]
+    fn get_status_with_ports_reports_active() {
+        let state = UpnpState::new();
+        {
+            let mut inner = state.inner.lock().expect("lock not poisoned");
+            inner.mapped_ports.push(MappedPort {
+                internal: 6881,
+                protocol: PortMappingProtocol::TCP,
+            });
+            inner.mapped_ports.push(MappedPort {
+                internal: 6882,
+                protocol: PortMappingProtocol::UDP,
+            });
+        }
+        let status = get_status(&state);
+        assert_eq!(status["active"], true);
+        let ports = status["ports"].as_array().expect("ports is array");
+        assert_eq!(ports.len(), 2);
+        assert_eq!(ports[0]["port"], 6881);
+        assert_eq!(ports[0]["protocol"], "TCP");
+        assert_eq!(ports[1]["port"], 6882);
+        assert_eq!(ports[1]["protocol"], "UDP");
+    }
+
+    #[test]
+    fn constants_are_sane() {
+        assert_eq!(LEASE_DURATION_SECS, 3600);
+        assert_eq!(RENEWAL_INTERVAL, Duration::from_secs(1800));
+        assert_eq!(MAPPING_DESC, "Motrix Next");
+        // Renewal interval must be less than lease duration
+        assert!(RENEWAL_INTERVAL.as_secs() < u64::from(LEASE_DURATION_SECS));
+    }
+}
