@@ -89,12 +89,13 @@ window.addEventListener('unhandledrejection', (e) => {
         'check_for_update',
         { channel, proxy: proxyServer },
       )
-      preferenceStore.updateAndSave({ lastCheckUpdateTime: Date.now() })
       if (update) {
         appStore.pendingUpdate = { version: update.version, body: update.body, date: update.date }
       }
     } catch (e) {
       logger.warn('Updater', 'auto check failed: ' + (e as Error).message)
+    } finally {
+      preferenceStore.updateAndSave({ lastCheckUpdateTime: Date.now() })
     }
   }
 

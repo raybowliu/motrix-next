@@ -334,8 +334,8 @@ onMounted(async () => {
             </template>
             {{ t('app.check-updates-now') }}
           </NButton>
-          <NText v-if="form.lastCheckUpdateTime" depth="3" style="font-size: 13px">
-            {{ new Date(form.lastCheckUpdateTime).toLocaleString() }}
+          <NText v-if="preferenceStore.config.lastCheckUpdateTime" depth="3" style="font-size: 13px">
+            {{ new Date(preferenceStore.config.lastCheckUpdateTime).toLocaleString() }}
           </NText>
           <NText v-else depth="3" style="font-size: 13px">—</NText>
         </div>

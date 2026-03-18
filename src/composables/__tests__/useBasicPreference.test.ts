@@ -116,7 +116,6 @@ describe('buildBasicSystemConfig', () => {
   const baseForm: BasicForm = {
     autoCheckUpdate: true,
     autoCheckUpdateInterval: 24,
-    lastCheckUpdateTime: 0,
     updateChannel: 'stable',
     dir: '/downloads',
     locale: 'en-US',
@@ -191,7 +190,6 @@ describe('transformBasicForStore', () => {
   const baseForm: BasicForm = {
     autoCheckUpdate: true,
     autoCheckUpdateInterval: 24,
-    lastCheckUpdateTime: 0,
     updateChannel: 'stable',
     dir: '/dl',
     locale: 'en-US',

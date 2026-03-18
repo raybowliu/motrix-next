@@ -14,7 +14,6 @@ export interface BasicForm {
   [key: string]: unknown
   autoCheckUpdate: boolean
   autoCheckUpdateInterval: number
-  lastCheckUpdateTime: number
   updateChannel: string
   dir: string
   locale: string
@@ -62,7 +61,6 @@ export function buildBasicForm(config: AppConfig, defaultDir: string = ''): Basi
   return {
     autoCheckUpdate: config.autoCheckUpdate ?? D.autoCheckUpdate,
     autoCheckUpdateInterval: config.autoCheckUpdateInterval ?? D.autoCheckUpdateInterval,
-    lastCheckUpdateTime: config.lastCheckUpdateTime ?? D.lastCheckUpdateTime,
     updateChannel: config.updateChannel ?? D.updateChannel,
     dir: config.dir || defaultDir,
     locale: config.locale || 'en-US',
