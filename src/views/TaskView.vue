@@ -12,6 +12,7 @@ import {
   parseFilesForSelection,
   buildSelectFileOption,
   buildStatusAwareConfirmAction,
+  shouldRestartMagnetPoll,
 } from '@/composables/useMagnetFlow'
 import { buildHistoryRecord, isMetadataTask } from '@/composables/useTaskLifecycle'
 import { shouldDeleteTorrent, trashTorrentFile, cleanupTorrentMetadataFiles } from '@/composables/useDownloadCleanup'
@@ -241,6 +242,11 @@ async function handleMagnetConfirm(selectedIndices: number[]) {
     logger.error('TaskView.magnetConfirm', e)
     message.error(t('task.magnet-select-fail') || 'Failed to configure download')
   }
+
+  // Resume polling for any remaining pending magnet GIDs
+  if (shouldRestartMagnetPoll(appStore.pendingMagnetGids)) {
+    startMagnetPoll()
+  }
 }
 
 async function handleMagnetCancel() {
@@ -256,6 +262,11 @@ async function handleMagnetCancel() {
     message.info(t('task.magnet-download-cancelled') || 'Download cancelled')
   } catch (e) {
     logger.error('TaskView.magnetCancel', e)
+  }
+
+  // Resume polling for any remaining pending magnet GIDs
+  if (shouldRestartMagnetPoll(appStore.pendingMagnetGids)) {
+    startMagnetPoll()
   }
 }
 

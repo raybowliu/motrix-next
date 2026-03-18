@@ -99,3 +99,15 @@ export function buildStatusAwareConfirmAction(status: string | undefined): Confi
       return { needsPause: false, needsResume: false }
   }
 }
+
+/**
+ * Determines whether the magnet metadata poll should restart after a file
+ * selection dialog is confirmed or cancelled.
+ *
+ * When multiple magnet links are added concurrently, only one file selection
+ * dialog is shown at a time. After the user finishes with one dialog, the
+ * poll must restart to process remaining pending magnet GIDs.
+ */
+export function shouldRestartMagnetPoll(pendingGids: string[]): boolean {
+  return pendingGids.length > 0
+}
