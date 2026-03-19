@@ -50,6 +50,44 @@ fn setup_app(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
 
     #[cfg(target_os = "macos")]
     app.on_menu_event(|app, event| match event.id().as_ref() {
+        // ── Cmd+W close: replicate the on_window_event CloseRequested flow ──
+        //
+        // PredefinedMenuItem::close_window calls macOS performClose: which
+        // bypasses Tauri's on_window_event handler.  This custom handler
+        // reads the same preference store and applies the same hide-or-dialog
+        // logic to ensure Cmd+W behaves identically to clicking the × button.
+        "close-window" => {
+            log::info!("menu:close-window — handling Cmd+W");
+
+            let store_prefs = app
+                .store("config.json")
+                .ok()
+                .and_then(|s| s.get("preferences"));
+
+            let should_hide = store_prefs
+                .as_ref()
+                .and_then(|p| p.get("minimizeToTrayOnClose")?.as_bool())
+                .unwrap_or(false);
+
+            if should_hide {
+                log::info!("menu:close-window — hiding to tray");
+                if let Some(window) = app.get_webview_window("main") {
+                    let _ = window.hide();
+                }
+
+                let hide_dock = store_prefs
+                    .as_ref()
+                    .and_then(|p| p.get("hideDockOnMinimize")?.as_bool())
+                    .unwrap_or(false);
+                if hide_dock {
+                    use tauri::ActivationPolicy;
+                    let _ = app.set_activation_policy(ActivationPolicy::Accessory);
+                }
+            } else {
+                log::info!("menu:close-window — showing exit dialog");
+                let _ = app.emit("show-exit-dialog", ());
+            }
+        }
         "new-task" => {
             let _ = app.emit("menu-event", "new-task");
         }

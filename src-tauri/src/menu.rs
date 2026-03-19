@@ -67,7 +67,11 @@ pub fn build_menu(app: &AppHandle) -> Result<Menu<tauri::Wry>, tauri::Error> {
             &PredefinedMenuItem::minimize(app, None)?,
             &PredefinedMenuItem::maximize(app, None)?,
             &PredefinedMenuItem::separator(app)?,
-            &PredefinedMenuItem::close_window(app, None)?,
+            // Custom item instead of PredefinedMenuItem::close_window — the
+            // predefined variant calls macOS's native performClose: which
+            // bypasses Tauri's on_window_event handler, preventing the
+            // minimize-to-tray / exit-dialog flow from running.
+            &MenuItem::with_id(app, "close-window", "Close Window", true, Some("CmdOrCtrl+W"))?,
         ],
     )?;
 
