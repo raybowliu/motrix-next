@@ -187,7 +187,9 @@ The user's channel preference is stored as `updateChannel` in the preference sto
 
 ### How to Publish a Release
 
-1. **Bump the version (can be done anytime):**
+All code changes must be finalized before starting. Execute these three steps in strict order:
+
+1. **Bump the version:**
 
    ```bash
    # Stable
@@ -196,36 +198,22 @@ The user's channel preference is stored as `updateChannel` in the preference sto
    ./scripts/bump-version.sh 1.4.0-beta.1
    ```
 
-   This only updates `Cargo.toml` + `package.json`. You can continue making changes after this.
+   **Do not modify code after this step.** This updates `Cargo.toml` + `package.json`.
 
-2. **When all changes are final, release:**
+2. **Release:**
 
    ```bash
    ./scripts/release.sh
    ```
 
-   This formats code, commits all changes, creates an annotated tag `v{VERSION}`, and pushes everything to origin.
+   This formats code, commits all changes, creates an annotated tag `v{VERSION}`, and pushes to origin.
+   The script outputs a color-coded channel indicator (yellow = pre-release, green = stable).
 
-3. **Create a GitHub Release:**
+3. **Generate Release Title and Notes:**
 
-   Go to **Releases → Create new release** on GitHub and **select the existing tag**:
+   Based on the commits included in this release, generate an English title and release notes following the Release Notes Conventions below. Output them in a markdown code block so the user can copy-paste directly into the GitHub Release page.
 
-   | Setting                 | Stable                     | Beta / RC       |
-   | ----------------------- | -------------------------- | --------------- |
-   | Tag                     | `v1.4.0` (select existing) | `v1.4.0-beta.1` |
-   | Target                  | `main`                     | `main`          |
-   | Title                   | `v1.4.0`                   | `v1.4.0-beta.1` |
-   | "Set as latest release" | ✅ Yes                     | ❌ No           |
-   | "Set as a pre-release"  | ❌ No                      | ✅ Yes          |
-
-   > **Both the tag name AND the pre-release checkbox matter.** They control different systems:
-   >
-   > - **Tag name** (`-beta` / `-rc`) → tells CI which updater JSON to write (`latest.json` vs `beta.json`)
-   > - **"Set as a pre-release"** → tells GitHub to exclude it from the "Latest" badge and the `/releases/latest` API (used by the website download page)
-   >
-   > If a beta release is NOT marked as pre-release, the website will serve the beta version to all users.
-
-4. **Click Publish** — CI automatically builds for all 6 platforms and uploads the updater JSON.
+4. **User publishes on GitHub** — CI automatically builds for all 6 platforms and uploads the updater JSON.
 
 ### Updater Principles
 

@@ -52,10 +52,16 @@ git tag -a "$TAG" -m "$TAG"
 # Push commit and tag
 git push && git push --tags
 
+# Determine release channel
+if [[ "$TAG" == *"-beta"* ]] || [[ "$TAG" == *"-rc"* ]] || [[ "$TAG" == *"-alpha"* ]]; then
+  CHANNEL="\033[33mPRE-RELEASE\033[0m"  # Yellow
+else
+  CHANNEL="\033[32mSTABLE\033[0m"  # Green
+fi
+
 echo ""
-echo "✓ Released $TAG"
+echo -e "✓ Released $TAG  $CHANNEL"
 echo "  → Commit and tag pushed to origin"
 echo ""
 echo "Next: Go to GitHub → Releases → Create new release"
 echo "  Select tag: $TAG"
-echo "  Pre-release: $(if [[ "$TAG" == *"-beta"* ]] || [[ "$TAG" == *"-rc"* ]]; then echo "✅ Yes"; else echo "❌ No"; fi)"
