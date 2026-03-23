@@ -82,7 +82,14 @@ What changed is everything underneath. Every transition and micro-interaction ha
 
 Download the latest release from [GitHub Releases](https://github.com/AnInsomniacy/motrix-next/releases).
 
-### macOS Users
+### macOS (Homebrew)
+
+```bash
+brew tap AnInsomniacy/motrix-next
+brew install --cask --no-quarantine motrix-next
+```
+
+### macOS (Manual)
 
 This app is not code-signed — Apple charges $99/year and I'm a PhD student surviving on instant noodles 🍜
 

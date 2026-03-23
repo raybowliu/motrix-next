@@ -191,3 +191,47 @@ jobs:
           # Upload (overwrite) the channel JSON to the fixed 'updater' tag
           gh release upload updater "$JSON_FILE" --clobber -R "${{ github.repository }}"
           echo "Uploaded $JSON_FILE to 'updater' release"
+
+  update-homebrew:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release' && !github.event.release.prerelease
+
+    steps:
+      - name: Download macOS artifacts and compute checksums
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="${{ github.event.release.tag_name }}"
+          VERSION="${TAG#v}"
+
+          gh release download "$TAG" \
+            -R "${{ github.repository }}" \
+            -p "MotrixNext_aarch64.app.tar.gz" \
+            -p "MotrixNext_x64.app.tar.gz"
+
+          ARM_SHA=$(shasum -a 256 MotrixNext_aarch64.app.tar.gz | cut -d ' ' -f1)
+          INTEL_SHA=$(shasum -a 256 MotrixNext_x64.app.tar.gz | cut -d ' ' -f1)
+
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+          echo "ARM_SHA=$ARM_SHA" >> "$GITHUB_ENV"
+          echo "INTEL_SHA=$INTEL_SHA" >> "$GITHUB_ENV"
+
+      - name: Update Homebrew Cask
+        env:
+          HOMEBREW_TAP_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+        run: |
+          git clone "https://x-access-token:${HOMEBREW_TAP_TOKEN}@github.com/AnInsomniacy/homebrew-motrix-next.git"
+          cd homebrew-motrix-next
+
+          CASK="Casks/motrix-next.rb"
+          sed -i "s/version \".*\"/version \"$VERSION\"/" "$CASK"
+          sed -i "s/sha256 arm:   \".*\"/sha256 arm:   \"$ARM_SHA\"/" "$CASK"
+          sed -i "s/intel: \".*\"/intel: \"$INTEL_SHA\"/" "$CASK"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add "$CASK"
+          git diff --cached --quiet && echo "No changes to commit" && exit 0
+          git commit -m "motrix-next $VERSION"
+          git push
