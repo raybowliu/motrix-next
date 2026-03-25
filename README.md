@@ -134,9 +134,7 @@ Both x64 and ARM64 builds are available.
 
 <br>
 
-This app is not code-signed — Apple charges $99/year and I'm a PhD student surviving on instant noodles 🍜
-
-Open Terminal and run:
+This app is not code-signed. Open Terminal and run:
 
 ```bash
 xattr -cr /Applications/MotrixNext.app
@@ -162,6 +160,12 @@ These are fundamental constraints of the Tauri sidecar model and the Windows ope
 We provide **NSIS installers** for Windows — lightweight (~20 MB), fast to install, and fully featured.
 
 </details>
+
+## Code Signing
+
+Motrix Next is **not code-signed** on macOS or Windows, so your browser or antivirus software may show a security warning when downloading or running the installer.
+
+The app is fully open-source and every release binary is built automatically by [GitHub Actions CI](https://github.com/AnInsomniacy/motrix-next/actions). For added peace of mind, you can always [build from source](#development).
 
 ## Development
 
@@ -238,9 +242,11 @@ PRs and issues are welcome! Please read the [Contributing Guide](docs/CONTRIBUTI
 
 ## Sponsor
 
-My supervisor doesn't know about this side project — [see what I'm supposed to be doing](https://github.com/AnInsomniacy).
+Built in the hours I should've been writing my thesis — I'm a PhD student surviving on instant noodles 🍜
 
-[Buy me a coffee ☕](https://github.com/AnInsomniacy/AnInsomniacy/blob/main/SPONSOR.md) and maybe I'll finally afford that Apple certificate!
+This app is not code-signed on macOS or Windows — Apple charges $99/year, and a Windows Authenticode certificate costs $300–600/year. That's a lot of instant noodles.
+
+[Buy me a coffee ☕](https://github.com/AnInsomniacy/AnInsomniacy/blob/main/SPONSOR.md) — maybe one day I can afford those certificates, so antivirus software stops treating my app like a criminal 🥲
 
 ## Star History
 
