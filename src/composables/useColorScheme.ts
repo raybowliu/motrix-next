@@ -48,12 +48,12 @@ const MCU_TO_CSS: Record<string, string> = {
  */
 const SURFACE_TONES = {
   light: {
-    surfaceDim: 87,
-    surfaceContainerLowest: 100,
-    surfaceContainerLow: 96,
-    surfaceContainer: 94,
-    surfaceContainerHigh: 92,
-    surfaceContainerHighest: 90,
+    surfaceDim: 84,
+    surfaceContainerLowest: 98,
+    surfaceContainerLow: 94,
+    surfaceContainer: 91,
+    surfaceContainerHigh: 88,
+    surfaceContainerHighest: 85,
   },
   dark: {
     surfaceDim: 6,

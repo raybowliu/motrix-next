@@ -37,16 +37,13 @@ const { t } = useI18n()
   padding: 16px 24px 16px 40px;
 }
 
-/* ── Restart Engine — soft teal maintenance button ──────────────── */
+/* ── Restart Engine — M3 tertiary maintenance button ────────────── */
 /* Same size/shape as Save & Discard but with extra left gap (32px)  */
-/* from the NSpace group. Teal conveys "maintenance tool" — calm,    */
+/* from the NSpace group. Tertiary conveys "maintenance tool" — calm, */
 /* professional, visible in dark mode without alarm.                 */
 .restart-engine-action-btn {
-  --btn-teal: #6aadad;
-  --btn-teal-bg: color-mix(in srgb, #6aadad 10%, transparent);
-  --btn-teal-hover: #7ebfbf;
-  color: var(--btn-teal) !important;
-  border-color: var(--btn-teal) !important;
+  color: var(--m3-tertiary) !important;
+  border-color: var(--m3-tertiary) !important;
   transition:
     color 0.35s cubic-bezier(0.2, 0, 0, 1),
     background-color 0.35s cubic-bezier(0.2, 0, 0, 1),
@@ -54,18 +51,18 @@ const { t } = useI18n()
     transform 0.15s cubic-bezier(0.2, 0, 0, 1);
 }
 .restart-engine-action-btn:hover {
-  color: var(--btn-teal-hover) !important;
-  background-color: var(--btn-teal-bg) !important;
+  color: var(--m3-tertiary) !important;
+  background-color: color-mix(in srgb, var(--m3-tertiary) 10%, transparent) !important;
 }
 .restart-engine-action-btn:active {
   transform: scale(0.97);
 }
 .restart-engine-action-btn :deep(.n-button__border) {
-  border-color: var(--btn-teal) !important;
+  border-color: var(--m3-tertiary) !important;
   transition: border-color 0.35s cubic-bezier(0.2, 0, 0, 1);
 }
 .restart-engine-action-btn :deep(.n-button__state-border) {
-  border-color: var(--btn-teal) !important;
+  border-color: var(--m3-tertiary) !important;
   transition: border-color 0.35s cubic-bezier(0.2, 0, 0, 1);
 }
 

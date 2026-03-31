@@ -54,13 +54,13 @@ watch(
 const techStack = [
   {
     name: 'Tauri 2',
-    color: '#FFC131',
+    color: '#D49700',
     /* Lucide app-window — desktop application framework */
     svg: '<rect x="2" y="4" width="20" height="16" rx="2"/><line x1="8" y1="4" x2="8" y2="20"/>',
   },
   {
     name: 'Vue 3',
-    color: '#42b883',
+    color: '#2E8B57',
     /* Lucide layers — layered composition framework */
     svg: '<path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.84Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/>',
   },
@@ -72,7 +72,7 @@ const techStack = [
   },
   {
     name: 'Naive UI',
-    color: '#63e2b7',
+    color: '#2A9D6E',
     /* Lucide leaf — nature/green brand identity */
     svg: '<path d="M11 20A7 7 0 0 1 9.8 6.9C15.5 4.9 20 .5 20 .5s-4.5 4.5-2.5 10.2A7 7 0 0 1 11 20"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>',
   },
@@ -250,12 +250,12 @@ function openUrl(url: string) {
   text-align: center;
   border-radius: 16px;
   border: 1px solid var(--m3-outline-variant);
-  background: var(--about-glass-bg);
+  background: color-mix(in srgb, var(--m3-surface-container-high) 96%, transparent);
   backdrop-filter: blur(24px) saturate(1.4);
   -webkit-backdrop-filter: blur(24px) saturate(1.4);
   box-shadow:
     0 8px 32px var(--m3-shadow),
-    0 0 0 1px var(--about-glass-ring);
+    0 0 0 1px color-mix(in srgb, var(--m3-on-surface) 8%, transparent);
 }
 
 /* ── Close Button ─────────────────────────────────────────────────── */
@@ -385,7 +385,8 @@ function openUrl(url: string) {
   padding: 3px 10px;
   border-radius: 12px;
   color: var(--tag-color);
-  background: color-mix(in srgb, var(--tag-color) 12%, transparent);
+  background: var(--about-card-bg);
+  border: 1px solid color-mix(in srgb, var(--tag-color) 40%, transparent);
   letter-spacing: 0.3px;
 }
 .about-tag svg {

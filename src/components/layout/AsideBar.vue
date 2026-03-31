@@ -129,7 +129,7 @@ function showAddTask() {
   width: var(--aside-width);
   height: 100%;
   background-color: var(--aside-bg);
-  color: var(--aside-text);
+  color: var(--m3-on-surface);
   flex-shrink: 0;
   z-index: 10;
 }
@@ -173,7 +173,7 @@ function showAddTask() {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--aside-icon-color);
+  color: var(--m3-on-surface-variant);
   background: transparent;
   border: none;
   padding: 0;
@@ -181,7 +181,7 @@ function showAddTask() {
 .menu-button:hover,
 .menu-button:focus-visible {
   background-color: var(--aside-icon-hover-bg);
-  color: var(--aside-text);
+  color: var(--m3-on-surface);
   outline: none;
 }
 .top-menu {

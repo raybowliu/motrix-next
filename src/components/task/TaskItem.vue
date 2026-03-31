@@ -342,9 +342,9 @@ onBeforeUnmount(() => {
   min-height: 78px;
   padding: 16px 12px;
   background-color: var(--task-item-bg);
-  border: 1px solid var(--task-item-border);
+  border: 1px solid var(--m3-outline-variant);
   /* Reserve 3px left border at base color so seeding only animates color */
-  border-left: 3px solid var(--task-item-border);
+  border-left: 3px solid var(--m3-outline-variant);
   border-radius: 6px;
   transition: border-color 0.2s cubic-bezier(0.2, 0, 0, 1);
 }
@@ -370,7 +370,7 @@ onBeforeUnmount(() => {
 /* unlike CSS transitions which break when the element is re-rendered.  */
 @keyframes seeding-border-enter {
   from {
-    border-left-color: var(--task-item-border);
+    border-left-color: var(--m3-outline-variant);
   }
   to {
     border-left-color: var(--m3-success);
@@ -410,7 +410,7 @@ onBeforeUnmount(() => {
     border-color 0.3s;
 }
 .task-name {
-  color: var(--task-item-text);
+  color: var(--m3-on-surface-variant);
   margin-bottom: 1.5rem;
   margin-right: 250px;
   overflow: hidden;

@@ -226,16 +226,16 @@ function onRelease(ev: PointerEvent) {
   cursor: default;
   text-align: right;
   direction: rtl;
-  border: 1px solid var(--task-action-border);
-  color: var(--task-action-color);
+  border: 1px solid var(--m3-surface-container-highest);
+  color: var(--m3-outline);
   background-color: var(--task-action-bg);
   border-radius: 18px;
   transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
   list-style: none;
 }
 .task-item-actions:hover {
-  border-color: var(--task-action-hover-border);
-  background-color: var(--task-action-hover-bg);
+  border-color: var(--m3-outline);
+  background-color: var(--m3-surface-container-high);
   width: auto;
 }
 .task-item-action {

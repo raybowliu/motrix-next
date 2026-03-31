@@ -52,11 +52,11 @@ const uploadSpeed = computed(() => bytesToSize(String(stat.value.uploadSpeed)))
     padding 0.35s cubic-bezier(0.2, 0, 0, 1),
     border-color 0.2s cubic-bezier(0.2, 0, 0, 1),
     background 0.2s cubic-bezier(0.2, 0, 0, 1);
-  border: 1px solid var(--speedometer-border);
-  background: var(--speedometer-bg);
+  border: 1px solid var(--m3-outline-variant);
+  background: var(--m3-surface-container);
 }
 .speedometer:hover {
-  border-color: var(--speedometer-hover-border);
+  border-color: var(--m3-outline);
 }
 .speedometer.stopped {
   width: 40px;
@@ -76,7 +76,7 @@ const uploadSpeed = computed(() => bytesToSize(String(stat.value.uploadSpeed)))
   align-items: center;
   justify-content: center;
   padding: 0;
-  color: var(--speedometer-stopped);
+  color: var(--m3-outline);
   transform: rotate(-15deg);
   transition:
     transform 0.35s cubic-bezier(0.2, 0, 0, 1),
@@ -102,7 +102,7 @@ const uploadSpeed = computed(() => bytesToSize(String(stat.value.uploadSpeed)))
   padding: 2px;
   text-align: center;
   vertical-align: top;
-  color: var(--speedometer-primary);
+  color: var(--color-primary);
   transition:
     transform 0.35s cubic-bezier(0.2, 0, 0, 1),
     color 0.2s cubic-bezier(0.2, 0, 0, 1);
@@ -117,7 +117,7 @@ const uploadSpeed = computed(() => bytesToSize(String(stat.value.uploadSpeed)))
   line-height: 15px;
   transform: scale(0.5);
   vertical-align: top;
-  color: var(--speedometer-primary);
+  color: var(--color-primary);
 }
 .value {
   overflow: hidden;
@@ -146,7 +146,7 @@ const uploadSpeed = computed(() => bytesToSize(String(stat.value.uploadSpeed)))
   opacity: 0.7;
 }
 .speed-row.upload {
-  color: var(--speedometer-text);
+  color: var(--m3-outline);
 }
 .speed-row.upload em {
   font-style: normal;
@@ -154,10 +154,10 @@ const uploadSpeed = computed(() => bytesToSize(String(stat.value.uploadSpeed)))
   line-height: 14px;
 }
 .speed-row.upload .speed-arrow {
-  color: var(--speedometer-text);
+  color: var(--m3-outline);
 }
 .speed-row.download {
-  color: var(--speedometer-primary);
+  color: var(--color-primary);
 }
 .speed-row.download span {
   font-size: 13px;
@@ -165,6 +165,6 @@ const uploadSpeed = computed(() => bytesToSize(String(stat.value.uploadSpeed)))
   font-weight: 500;
 }
 .speed-row.download .speed-arrow {
-  color: var(--speedometer-primary);
+  color: var(--color-primary);
 }
 </style>
