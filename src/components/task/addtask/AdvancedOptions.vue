@@ -103,10 +103,14 @@ function cleanUserAgent() {
             <NRadio value="none">{{ t('task.proxy-mode-none') }}</NRadio>
             <NRadio v-if="globalProxyAvailable" value="global">
               {{ t('task.proxy-mode-global') }}
-              <span v-if="proxyMode === 'global'" class="proxy-hint">{{ globalProxyServer }}</span>
             </NRadio>
             <NRadio value="custom">{{ t('task.proxy-mode-custom') }}</NRadio>
           </NRadioGroup>
+          <div class="proxy-hint-collapse" :class="{ 'proxy-hint-collapse--open': proxyMode === 'global' }">
+            <div class="proxy-hint-collapse__inner">
+              <div class="proxy-server-hint">{{ t('task.proxy-global-server') }} {{ globalProxyServer }}</div>
+            </div>
+          </div>
           <NCollapseTransition :show="proxyMode === 'custom'">
             <NInput
               :value="customProxy"
@@ -165,15 +169,25 @@ function cleanUserAgent() {
 .proxy-radio-group {
   display: flex;
   flex-direction: column;
-  gap: 6px;
   width: 100%;
 }
-.proxy-hint {
+.proxy-hint-collapse {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.25s ease;
+}
+.proxy-hint-collapse--open {
+  grid-template-rows: 1fr;
+}
+.proxy-hint-collapse__inner {
+  overflow: hidden;
+}
+.proxy-server-hint {
   font-size: var(--font-size-sm);
   color: var(--n-text-color-3, #999);
   opacity: 0.8;
-  margin-left: 6px;
   user-select: all;
+  padding: 4px 0 2px;
 }
 .custom-proxy-input {
   margin-top: 6px;

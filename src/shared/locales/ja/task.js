@@ -37,6 +37,7 @@ export default {
   'options-apply-failed': 'オプションの適用に失敗しました',
   'proxy-mode-none': 'プロキシなし',
   'proxy-mode-global': 'グローバルプロキシを使用',
+  'proxy-global-server': 'グローバルプロキシサーバー:',
   'proxy-mode-custom': 'カスタムプロキシ',
   'use-proxy': 'グローバルプロキシを使用',
   'proxy-not-configured': 'プロキシ未設定',

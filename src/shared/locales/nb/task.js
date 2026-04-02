@@ -37,6 +37,7 @@ export default {
   'options-apply-failed': 'Kunne ikke bruke alternativer',
   'proxy-mode-none': 'Ingen proxy',
   'proxy-mode-global': 'Global proxy',
+  'proxy-global-server': 'Global proxyserver:',
   'proxy-mode-custom': 'Egendefinert proxy',
   'use-proxy': 'Bruk global proxy',
   'proxy-not-configured': 'Proxy er ikke konfigurert',

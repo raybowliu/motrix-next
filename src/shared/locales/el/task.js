@@ -37,6 +37,7 @@ export default {
   'options-apply-failed': 'Αποτυχία εφαρμογής επιλογών',
   'proxy-mode-none': 'Χωρίς proxy',
   'proxy-mode-global': 'Καθολικό proxy',
+  'proxy-global-server': 'Καθολικός διακομιστής μεσολάβησης:',
   'proxy-mode-custom': 'Προσαρμοσμένο proxy',
   'use-proxy': 'Χρήση καθολικού proxy',
   'proxy-not-configured': 'Δεν έχει ρυθμιστεί proxy',

@@ -37,6 +37,7 @@ export default {
   'options-apply-failed': 'Beállítások alkalmazása sikertelen',
   'proxy-mode-none': 'Nincs proxy',
   'proxy-mode-global': 'Globális proxy',
+  'proxy-global-server': 'Globális proxyszerver:',
   'proxy-mode-custom': 'Egyéni proxy',
   'use-proxy': 'Globális proxy használata',
   'proxy-not-configured': 'Proxy nincs beállítva',

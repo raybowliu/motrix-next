@@ -37,6 +37,7 @@ export default {
   'options-apply-failed': '옵션 적용 실패',
   'proxy-mode-none': '프록시 없음',
   'proxy-mode-global': '글로벌 프록시 사용',
+  'proxy-global-server': '글로벌 프록시 서버:',
   'proxy-mode-custom': '사용자 정의 프록시',
   'use-proxy': '글로벌 프록시 사용',
   'proxy-not-configured': '프록시 미설정',

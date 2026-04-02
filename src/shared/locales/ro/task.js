@@ -37,6 +37,7 @@ export default {
   'options-apply-failed': 'Aplicarea opțiunilor a eșuat',
   'proxy-mode-none': 'Fără proxy',
   'proxy-mode-global': 'Proxy global',
+  'proxy-global-server': 'Server proxy global:',
   'proxy-mode-custom': 'Proxy personalizat',
   'use-proxy': 'Folosește proxy global',
   'proxy-not-configured': 'Proxy neconfigurat',

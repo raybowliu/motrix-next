@@ -58,28 +58,35 @@ const message = useAppMessage()
 
 const activeTab = ref(ADD_TASK_TYPE.URI)
 const showAdvanced = ref(false)
-const config = preferenceStore.config
 const submitting = ref(false)
 const selectedBatchIndex = ref(0)
 
 const form = ref({
   uris: '',
   out: '',
-  dir: config.dir || '',
-  split: config.split || 16,
+  dir: preferenceStore.config.dir || '',
+  split: preferenceStore.config.split || 16,
   userAgent: '',
   authorization: '',
   referer: '',
   cookie: '',
-  proxyMode: (isGlobalDownloadProxyActive(config.proxy) ? 'global' : 'none') as 'none' | 'global' | 'custom',
+  proxyMode: (isGlobalDownloadProxyActive(preferenceStore.config.proxy) ? 'global' : 'none') as
+    | 'none'
+    | 'global'
+    | 'custom',
   customProxy: '',
 })
 
-/** Whether a usable global proxy is configured in Settings → Advanced. */
-const globalProxyAvailable = computed(() => isGlobalProxyConfigured(config.proxy))
+/**
+ * Whether a usable global proxy is configured in Settings → Advanced.
+ * Must read through preferenceStore.config (not a cached local) because
+ * the store replaces the entire config ref on save, which would break
+ * reactivity for any local alias.
+ */
+const globalProxyAvailable = computed(() => isGlobalProxyConfigured(preferenceStore.config.proxy))
 
-/** The global proxy server address for display in the checkbox hint. */
-const globalProxyServer = computed(() => config.proxy?.server ?? '')
+/** The global proxy server address for display in the radio hint. */
+const globalProxyServer = computed(() => preferenceStore.config.proxy?.server ?? '')
 
 const maxSplit = ENGINE_MAX_CONNECTION_PER_SERVER
 
@@ -345,7 +352,7 @@ function handleClose() {
     authorization: '',
     referer: '',
     cookie: '',
-    proxyMode: isGlobalDownloadProxyActive(config.proxy) ? 'global' : 'none',
+    proxyMode: isGlobalDownloadProxyActive(preferenceStore.config.proxy) ? 'global' : 'none',
     customProxy: '',
   })
   submitting.value = false

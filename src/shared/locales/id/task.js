@@ -37,6 +37,7 @@ export default {
   'options-apply-failed': 'Gagal menerapkan opsi',
   'proxy-mode-none': 'Tanpa proxy',
   'proxy-mode-global': 'Proxy global',
+  'proxy-global-server': 'Server proxy global:',
   'proxy-mode-custom': 'Proxy kustom',
   'use-proxy': 'Gunakan proxy global',
   'proxy-not-configured': 'Proxy belum dikonfigurasi',

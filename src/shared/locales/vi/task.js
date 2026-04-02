@@ -37,6 +37,7 @@ export default {
   'options-apply-failed': 'Áp dụng tùy chọn thất bại',
   'proxy-mode-none': 'Không dùng proxy',
   'proxy-mode-global': 'Proxy toàn cục',
+  'proxy-global-server': 'Máy chủ proxy toàn cầu:',
   'proxy-mode-custom': 'Proxy tùy chỉnh',
   'use-proxy': 'Sử dụng proxy toàn cục',
   'proxy-not-configured': 'Chưa cấu hình proxy',

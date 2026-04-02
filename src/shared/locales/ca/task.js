@@ -37,6 +37,7 @@ export default {
   'options-apply-failed': 'Error en aplicar les opcions',
   'proxy-mode-none': 'Sense proxy',
   'proxy-mode-global': 'Proxy global',
+  'proxy-global-server': 'Servidor intermediari global:',
   'proxy-mode-custom': 'Proxy personalitzat',
   'use-proxy': 'Utilitza el proxy global',
   'proxy-not-configured': 'Proxy no configurat',

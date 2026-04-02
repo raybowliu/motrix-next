@@ -8,7 +8,7 @@
   ; aria2 is single-process — no child processes to worry about.
   ; On Windows, a running .exe is locked by the OS and cannot be overwritten.
   ; taskkill exits with code 128 if the process does not exist — harmless.
-  nsExec::ExecToLog 'taskkill /F /IM motrixnext-aria2c.exe'
+  nsExec::Exec 'taskkill /F /IM motrixnext-aria2c.exe'
 !macroend
 
 !macro NSIS_HOOK_POSTINSTALL

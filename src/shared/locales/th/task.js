@@ -37,6 +37,7 @@ export default {
   'options-apply-failed': 'ตั้งค่าตัวเลือกล้มเหลว',
   'proxy-mode-none': 'ไม่ใช้พร็อกซี',
   'proxy-mode-global': 'พร็อกซีส่วนกลาง',
+  'proxy-global-server': 'เซิร์ฟเวอร์พร็อกซีส่วนกลาง:',
   'proxy-mode-custom': 'พร็อกซีแบบกำหนดเอง',
   'use-proxy': 'ใช้พร็อกซีส่วนกลาง',
   'proxy-not-configured': 'ยังไม่ได้ตั้งค่าพร็อกซี',

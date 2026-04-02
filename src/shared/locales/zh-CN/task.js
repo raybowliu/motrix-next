@@ -37,6 +37,7 @@ export default {
   'options-apply-failed': '选项应用失败',
   'proxy-mode-none': '不使用代理',
   'proxy-mode-global': '使用全局代理',
+  'proxy-global-server': '全局代理服务器:',
   'proxy-mode-custom': '自定义代理',
   'use-proxy': '使用全局代理',
   'proxy-not-configured': '未配置代理',

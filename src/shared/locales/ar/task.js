@@ -37,6 +37,7 @@ export default {
   'options-apply-failed': 'فشل تطبيق الخيارات',
   'proxy-mode-none': 'بدون وكيل',
   'proxy-mode-global': 'استخدم الوكيل العام',
+  'proxy-global-server': 'خادم الوكيل العام:',
   'proxy-mode-custom': 'وكيل مخصص',
   'use-proxy': 'استخدام الوكيل العام',
   'proxy-not-configured': 'لم يتم إعداد الوكيل',

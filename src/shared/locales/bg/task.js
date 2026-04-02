@@ -37,6 +37,7 @@ export default {
   'options-apply-failed': 'Неуспешно прилагане на опциите',
   'proxy-mode-none': 'Без прокси',
   'proxy-mode-global': 'Глобален прокси',
+  'proxy-global-server': 'Глобален прокси сървър:',
   'proxy-mode-custom': 'Потребителски прокси',
   'use-proxy': 'Използвай глобално прокси',
   'proxy-not-configured': 'Проксито не е конфигурирано',

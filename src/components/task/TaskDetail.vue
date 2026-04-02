@@ -68,6 +68,7 @@ const {
   form: optForm,
   canModify: optCanModify,
   globalProxyAvailable: optGlobalProxyAvailable,
+  proxyAddress: optProxyAddress,
   dirty: optDirty,
   applying: optApplying,
   applyOptions: optApplyFn,
@@ -494,6 +495,14 @@ function handleClose() {
                     </NRadio>
                     <NRadio value="custom">{{ t('task.proxy-mode-custom') }}</NRadio>
                   </NRadioGroup>
+                  <div
+                    class="proxy-hint-collapse"
+                    :class="{ 'proxy-hint-collapse--open': optForm.proxyMode === 'global' }"
+                  >
+                    <div class="proxy-hint-collapse__inner">
+                      <div class="proxy-server-hint">{{ t('task.proxy-global-server') }} {{ optProxyAddress }}</div>
+                    </div>
+                  </div>
                   <NCollapseTransition :show="optForm.proxyMode === 'custom'">
                     <NInput
                       v-model:value="optForm.customProxy"
@@ -716,11 +725,28 @@ function handleClose() {
 .proxy-radio-group {
   display: flex;
   flex-direction: column;
-  gap: 6px;
   width: 100%;
 }
 .custom-proxy-input {
   margin-top: 4px;
   margin-left: 24px;
+}
+.proxy-hint-collapse {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.25s ease;
+}
+.proxy-hint-collapse--open {
+  grid-template-rows: 1fr;
+}
+.proxy-hint-collapse__inner {
+  overflow: hidden;
+}
+.proxy-server-hint {
+  font-size: var(--font-size-sm);
+  color: var(--n-text-color-3, #999);
+  opacity: 0.8;
+  user-select: all;
+  padding: 4px 0 2px;
 }
 </style>

@@ -37,6 +37,7 @@ export default {
   'options-apply-failed': 'اعمال گزینه‌ها ناموفق بود',
   'proxy-mode-none': 'بدون پروکسی',
   'proxy-mode-global': 'پروکسی سراسری',
+  'proxy-global-server': 'سرور پروکسی سراسری:',
   'proxy-mode-custom': 'پروکسی سفارشی',
   'use-proxy': 'استفاده از پروکسی سراسری',
   'proxy-not-configured': 'پروکسی پیکربندی نشده',
